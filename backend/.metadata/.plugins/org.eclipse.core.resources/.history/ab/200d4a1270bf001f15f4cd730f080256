@@ -1,0 +1,15 @@
+package com.indus.training.microservice.dao;
+
+import java.util.List;
+
+import com.indus.training.microservice.entity.TvPlan;
+import com.indus.training.microservice.exception.SubscriptionException;
+
+public interface TvService {
+
+	public TvPlan addOrUpdateTvPlan(TvPlan plan) throws SubscriptionException;
+
+	public Boolean deleteTvPlan(Long id) throws SubscriptionException;
+
+	public List<TvPlan> getAllPlans() throws SubscriptionException;
+}

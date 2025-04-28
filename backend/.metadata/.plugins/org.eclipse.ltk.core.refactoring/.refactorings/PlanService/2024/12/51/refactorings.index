@@ -1,0 +1,18 @@
+1734644392620	Rename package 'com.indus.training.microservice'
+1734644786638	Rename package 'com.indus.training.micro.dao'
+1734644798089	Rename package 'com.indus.training.micro.service'
+1734644807467	Rename package 'com.indus.training.micro.repo'
+1734644815909	Rename package 'com.indus.training.micro.impl'
+1734644824780	Rename package 'com.indus.training.microserviceimpl'
+1734644833752	Rename package 'com.indus.training.micro.exception'
+1734644842337	Rename package 'com.indus.training.micro.entity'
+1734644895144	Copy package
+1734644900226	Copy package
+1734644942732	Rename package 'com.indus.training.microservice.service'
+1734644948496	Copy package
+1734679478889	Delete element
+1734679484199	Delete element
+1734679512513	Rename type 'Plan'
+1734682104795	Rename type 'PlanRepo'
+1734760947551	Rename type 'ISubscription'
+1734762949371	Delete element

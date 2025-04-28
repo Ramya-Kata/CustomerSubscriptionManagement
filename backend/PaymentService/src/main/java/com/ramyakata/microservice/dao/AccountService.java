@@ -1,0 +1,15 @@
+package com.ramyakata.microservice.dao;
+
+import com.ramyakata.microservice.entity.Account;
+import com.ramyakata.microservice.exception.BankException;
+
+public interface AccountService {
+
+	public Boolean saveAccount(Account account) throws BankException;
+
+	public Account getCustomerByAccountNumber(String accountNumber) throws BankException;
+
+	public Boolean deleteAccount(Account account) throws BankException;
+
+	public Boolean transferAmount(Account senderAccount, Double amount) throws BankException;
+}

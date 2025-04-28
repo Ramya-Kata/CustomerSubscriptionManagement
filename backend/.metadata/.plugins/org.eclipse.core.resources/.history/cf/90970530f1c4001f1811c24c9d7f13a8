@@ -1,0 +1,20 @@
+package com.indus.training.microservice.repo;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import com.indus.training.microservice.entity.Customer;
+
+@Repository
+public interface CustomerRepo extends JpaRepository<Customer, Long> {
+
+	@Query("SELECT c FROM Customer c JOIN FETCH c.addrId WHERE c.gmail = :gmail")
+	public Customer getByGmail(@Param("gmail") String gmail);
+
+	@Modifying
+	@Query("DELETE FROM Customer c WHERE c.gmail = :gmail")
+	public void deletByGmail(@Param("gmail") String gmail);
+}

@@ -1,0 +1,106 @@
+package com.indus.training.microservice;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
+import com.ramyakata.microservice.dto.PaginatedResponse;
+import com.ramyakata.microservice.entity.WifiPlan;
+import com.ramyakata.microservice.repo.WifiPlanRepo;
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+public class WifiServiceIntegrationTest {
+
+	@Autowired
+	private TestRestTemplate restTemplate;
+
+	private WifiPlan validPlan;
+	private WifiPlan invalidPlan;
+
+	@Autowired
+	private WifiPlanRepo wifiPlanRepo;
+
+	@BeforeEach
+	void setUp() {
+		wifiPlanRepo.deleteAll();
+
+		validPlan = new WifiPlan();
+		validPlan.setPlanName("Basic Wifi Plan");
+		validPlan.setDataLimit("50GB");
+		validPlan.setSpeed(100);
+		validPlan.setMonthlyCost(15.0);
+		validPlan.setDiscount(10.0);
+
+		invalidPlan = new WifiPlan();
+		invalidPlan.setPlanName(null);
+	}
+
+	@Test
+	void testAddOrUpdateWifiPlan_ValidPlan() {
+		ResponseEntity<WifiPlan> response = restTemplate.postForEntity("/plan/wifi/update", validPlan, WifiPlan.class);
+
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+		assertNotNull(response.getBody());
+		assertEquals("Basic Wifi Plan", response.getBody().getPlanName());
+	}
+
+	@Test
+	void testAddOrUpdateWifiPlan_InvalidPlan() {
+		ResponseEntity<String> response = restTemplate.postForEntity("/plan/wifi/update", invalidPlan, String.class);
+
+		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+		assertTrue(response.getBody().contains("Wifi plan cannot be null"), "Error message should match expected");
+
+	}
+
+	@Test
+	void testGetAllWifiPlans() {
+		restTemplate.postForEntity("/plan/wifi/update", validPlan, WifiPlan.class);
+
+		WifiPlan secondPlan = new WifiPlan();
+		secondPlan.setPlanName("Premium Wifi Plan");
+		secondPlan.setDataLimit("Unlimited");
+		secondPlan.setSpeed(500);
+		secondPlan.setMonthlyCost(30.0);
+		secondPlan.setDiscount(15.0);
+		restTemplate.postForEntity("/plan/wifi/update", secondPlan, WifiPlan.class);
+
+		ResponseEntity<PaginatedResponse<WifiPlan>> response = restTemplate.exchange(
+				"/plan/wifi/get/all?pageNumber=0&pageSize=10", HttpMethod.GET, null,
+				new ParameterizedTypeReference<PaginatedResponse<WifiPlan>>() {
+				});
+
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+		assertNotNull(response.getBody());
+		assertEquals(2, response.getBody().getContent().size(), "The number of wifi plans should be 2");
+	}
+
+	@Test
+	void testDeleteWifiPlan() {
+		WifiPlan savedPlan = restTemplate.postForEntity("/plan/wifi/update", validPlan, WifiPlan.class).getBody();
+		assertNotNull(savedPlan);
+
+		String getUrl = "/plan/wifi/get/all?pageNumber=0&pageSize=10";
+		ResponseEntity<PaginatedResponse<WifiPlan>> responseBeforeDelete = restTemplate.exchange(getUrl, HttpMethod.GET,
+				null, new ParameterizedTypeReference<PaginatedResponse<WifiPlan>>() {
+				});
+		assertEquals(1, responseBeforeDelete.getBody().getContent().size(),
+				"There should be 1 wifi plan before deletion.");
+
+		restTemplate.delete("/plan/wifi/delete/" + savedPlan.getId());
+
+		ResponseEntity<PaginatedResponse<WifiPlan>> responseAfterDelete = restTemplate.exchange(getUrl, HttpMethod.GET,
+				null, new ParameterizedTypeReference<PaginatedResponse<WifiPlan>>() {
+				});
+		assertTrue(responseAfterDelete.getBody().getContent().isEmpty(),
+				"The wifi plans should be empty after deletion.");
+	}
+}

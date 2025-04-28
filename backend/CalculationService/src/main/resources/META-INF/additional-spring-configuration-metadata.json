@@ -1,0 +1,34 @@
+{
+	"properties": [
+		{
+			"name": "spring.cloud.config.enabled",
+			"type": "java.lang.String",
+			"description": "A description for 'spring.cloud.config.enabled'"
+		},
+		{
+			"name": "eureka.client.service-url.defaultZone",
+			"type": "java.lang.String",
+			"description": "A description for 'eureka.client.service-url.defaultZone'"
+		},
+		{
+			"name": "eureka.client.service-url.defaultZone",
+			"type": "java.lang.String",
+			"description": "A description for 'eureka.client.service-url.defaultZone'"
+		},
+		{
+			"name": "eureka.instance.prefer-ip-address",
+			"type": "java.lang.String",
+			"description": "A description for 'eureka.instance.prefer-ip-address'"
+		},
+		{
+			"name": "PLAN_SERVICE_URL",
+			"type": "java.lang.String",
+			"description": "A description for 'PLAN_SERVICE_URL'"
+		},
+		{
+			"name": "plan.service.url",
+			"type": "java.lang.String",
+			"description": "A description for 'plan.service.url'"
+		}
+	]
+}

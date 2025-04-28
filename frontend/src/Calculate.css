@@ -1,0 +1,83 @@
+/* Container */
+.calculate-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Ensures content fills the viewport height */
+    padding: 20px;
+    background: linear-gradient(to bottom, #fafafa, #eaeaea); /* Light gradient */
+    color: #2e2e2e;
+    font-family: "Poppins", sans-serif;
+  }
+  
+  /* Heading */
+  .calculate-container h2 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #5e4b8c; /* Deep purple */
+    text-align: center;
+    margin-bottom: 20px;
+    text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Results Card */
+  .results-card {
+    background: #ffffff; /* Clean white background */
+    border: 1px solid #dcdcdc; /* Subtle border */
+    border-radius: 12px;
+    padding: 20px;
+    max-width: 400px;
+    width: 100%;
+    text-align: left;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    color: #2e2e2e;
+  }
+  
+  .results-card p {
+    font-size: 16px;
+    margin: 10px 0;
+    line-height: 1.5;
+  }
+  
+  .results-card p strong {
+    color: #5e4b8c; /* Highlighted text in purple */
+  }
+  
+  /* Loading Text */
+  .loading-text {
+    font-size: 18px;
+    color: #6c757d; /* Subtle gray for loading state */
+    margin-top: 20px;
+    text-align: center;
+  }
+  
+  /* Ensure Footer is at the Bottom */
+  .footer {
+    margin-top: auto;
+    background: #2e2e2e; /* Dark background */
+    color: #f5f5f5; /* Light text */
+    text-align: center;
+    padding: 10px 20px;
+    font-size: 12px;
+  }
+  
+
+  /* Pay Now Button */
+.pay-now-button {
+    margin-top: 20px;
+    padding: 12px 20px;
+    background: linear-gradient(to right, #704778, #916fe1); /* Warm gradient */
+    color: #ffffff;
+    border: none;
+    border-radius: 24px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .pay-now-button:hover {
+    background: #916fe1; /* Slightly darker on hover */
+    transform: scale(1.05); /* Slight hover effect */
+  }
+  

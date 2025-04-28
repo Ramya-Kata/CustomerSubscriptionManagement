@@ -1,0 +1,77 @@
+package com.indus.training.microservice.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+
+import com.indus.training.microservice.dao.TvService;
+import com.indus.training.microservice.entity.TvPlan;
+import com.indus.training.microservice.exception.SubscriptionException;
+import com.indus.training.microservice.repo.TvPlanRepo;
+
+@Service
+public class TvDao implements TvService {
+
+	@Autowired
+	private TvPlanRepo tvRepo;
+
+	@Override
+	@CacheEvict(value = "tvPlans", allEntries = true)
+	public TvPlan addOrUpdateTvPlan(TvPlan plan) throws SubscriptionException {
+
+		try {
+			if (plan == null) {
+				throw new SubscriptionException("Mobile plan cannot be null");
+			}
+			return tvRepo.save(plan);
+		} catch (IllegalArgumentException ex) {
+			throw new SubscriptionException("Invalid input: " + ex.getMessage());
+		} catch (Exception ex) {
+			throw new SubscriptionException("An unexpected error occurred while saving the plan: " + ex.getMessage());
+		}
+	}
+
+	@Override
+	@CacheEvict(value = "tvPlans", allEntries = true)
+	public Boolean deleteTvPlan(Long id) throws SubscriptionException {
+
+		try {
+			if (id == null) {
+				throw new SubscriptionException("Mobile plan ID cannot be null");
+			}
+			if (!tvRepo.existsById(id)) {
+				throw new SubscriptionException("Mobile plan with ID " + id + " not found");
+			}
+			tvRepo.deleteById(id);
+			return true;
+		} catch (Exception ex) {
+			throw new SubscriptionException("An error occurred while deleting the plan: " + ex.getMessage());
+		}
+	}
+
+	@Override
+	@Cacheable(value = "tvPlans")
+	public Page<TvPlan> getAllPlans(int pageNumber, int pageSize, String sortBy, String direction)
+			throws SubscriptionException {
+
+		try {
+
+			Sort sort = Sort.by(Sort.Order.by(sortBy));
+			if ("desc".equalsIgnoreCase(direction)) {
+				sort = Sort.by(Sort.Order.desc(sortBy));
+			}
+
+			Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
+
+			return tvRepo.findAll(pageable);
+		} catch (Exception ex) {
+			throw new SubscriptionException("An error occurred while retrieving the plans: " + ex.getMessage());
+		}
+	}
+
+}

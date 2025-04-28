@@ -1,0 +1,162 @@
+package com.indus.training.microservice.impl;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Random;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.OptimisticLockingFailureException;
+import org.springframework.stereotype.Service;
+
+import com.indus.training.microservice.dao.AccountService;
+import com.indus.training.microservice.entity.Account;
+import com.indus.training.microservice.exception.BankException;
+import com.indus.training.microservice.repo.AccountRepo;
+
+import jakarta.transaction.Transactional;
+
+@Service
+public class AccountDao implements AccountService {
+
+	@Autowired
+	private AccountRepo accountRepoObj;
+
+	@Transactional
+	@Override
+	public Boolean saveAccount(Account account) throws BankException {
+
+		if (account == null) {
+			throw new BankException("Couldn't process Null Values. Provide valid account details to save.");
+		}
+
+		try {
+			String yearMonth = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMM"));
+			String randomSuffix = String.format("%04d", new Random().nextInt(10000));
+			String accountNumber = "BANK" + yearMonth + randomSuffix;
+
+			account.setAccountNumber(accountNumber);
+
+			account.setOpenDate(LocalDate.now());
+
+			account.setExpiryDate(account.getOpenDate().plusYears(5));
+
+			account.setRoutingNumber("CHAS000007");
+
+			accountRepoObj.save(account);
+
+		} catch (IllegalArgumentException e) {
+
+			throw new BankException("Couldn't save the account Details: " + e.getMessage());
+
+		} catch (OptimisticLockingFailureException e) {
+
+			throw new BankException("OptimisticLockingFailureException: " + e.getMessage());
+		}
+		return true;
+	}
+
+	@Override
+	public Account getCustomerByAccountNumber(String accountNumber) throws BankException {
+
+		if (accountNumber == null) {
+			throw new BankException("Please give Appropriate accountNumber");
+		}
+		Account account = null;
+		try {
+			account = accountRepoObj.getCustomerByAccountNumber(accountNumber);
+
+		} catch (IllegalArgumentException e) {
+			throw new BankException("Couldn't get the account Details: " + e.getMessage());
+
+		}
+
+		return account;
+	}
+
+	@Override
+	public Boolean updateAmount(Account account, Double amount, Boolean isDeposit) throws BankException {
+		if (account == null || amount == null) {
+			throw new BankException(
+					"To update amount, neither the amount to be updated nor the the account details should be null");
+		}
+		if (isDeposit == null) {
+			throw new BankException(
+					"Whether it is a deposit or withdrawal should be mentioned to perform that specific operation");
+		}
+		if (amount <= 0) {
+			throw new BankException("Amount must be greater than zero");
+		}
+
+		Account existingAccount = accountRepoObj.getCustomerByAccountNumber(account.getAccountNumber());
+
+		if (existingAccount == null) {
+			throw new BankException("Account Not Found");
+		}
+
+		if (!existingAccount.getRoutingNumber().equalsIgnoreCase(account.getRoutingNumber())) {
+			throw new BankException("Entered Routing NUmber is not valid");
+		}
+
+		if (!existingAccount.getAccountHolderName().equalsIgnoreCase(account.getAccountHolderName())) {
+			throw new BankException("CardholderName doesn't match");
+		}
+
+		if (existingAccount.getExpiryDate().isBefore(LocalDate.now())) {
+			throw new BankException("Account has expired");
+		}
+
+		if (!existingAccount.getAccountType().name().equalsIgnoreCase(account.getAccountType().name())) {
+			throw new BankException("Account type does not match");
+		}
+
+		try {
+
+			double updatedBalance = isDeposit ? existingAccount.getBalance() + amount
+					: existingAccount.getBalance() - amount;
+
+			existingAccount.setBalance(updatedBalance);
+
+			accountRepoObj.save(existingAccount);
+		} catch (IllegalArgumentException e) {
+
+			throw new BankException("Couldn't update the account Details:" + e.getMessage());
+		} catch (OptimisticLockingFailureException e) {
+			throw new BankException("OptimisticLockingFailureException:" + e.getMessage());
+		}
+		return true;
+
+	}
+
+	@Override
+	public Boolean deleteAccount(Account account) throws BankException {
+		if (account == null) {
+			throw new BankException("To delete an account, valid account details should be provided");
+		}
+
+		Account existingAccount = accountRepoObj.getCustomerByAccountNumber(account.getAccountNumber());
+
+		if (existingAccount == null) {
+			throw new BankException("Account Not Found");
+		}
+		if (!existingAccount.getRoutingNumber().equalsIgnoreCase(account.getRoutingNumber())) {
+			throw new BankException("Entered Routing NUmber is not valid");
+		}
+
+		if (!existingAccount.getAccountHolderName().equalsIgnoreCase(account.getAccountHolderName())) {
+			throw new BankException("CardholderName doesn't match");
+		}
+
+		if (existingAccount.getExpiryDate().isBefore(LocalDate.now())) {
+			throw new BankException("Account has expired");
+		}
+
+		if (!existingAccount.getAccountType().name().equalsIgnoreCase(account.getAccountType().name())) {
+			throw new BankException("Account type does not match");
+		}
+
+		accountRepoObj.deleteByAccountNumber(account);
+
+		return true;
+
+	}
+}

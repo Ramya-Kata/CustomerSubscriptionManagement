@@ -1,0 +1,31 @@
+package com.ramyakata.microservice.repo;
+
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import com.ramyakata.microservice.dto.PlanDetails;
+
+/**
+ * Feign client for communicating with the Plan Service.
+ */
+@FeignClient(name = "PLAN-SERVICE", url = "http://localhost:8082")
+//@FeignClient(name = "plan-service", url = "${plan.service.url}")
+public interface PlanServiceProxy {
+
+	/**
+	 * Fetches the details of a specific plan based on type.
+	 *
+	 * @param planType The type of the plan (e.g., mobile, tv, wifi).
+	 * @param id       The ID of the plan.
+	 * @return PlanDetails containing information about the plan.
+	 */
+	@GetMapping("/plan/mobile/{id}")
+	PlanDetails getMobilePlan(@PathVariable("id") Long id);
+
+	@GetMapping("/plan/tv/{id}")
+	PlanDetails getTvPlan(@PathVariable("id") Long id);
+
+	@GetMapping("/plan/wifi/{id}")
+	PlanDetails getWifiPlan(@PathVariable("id") Long id);
+}

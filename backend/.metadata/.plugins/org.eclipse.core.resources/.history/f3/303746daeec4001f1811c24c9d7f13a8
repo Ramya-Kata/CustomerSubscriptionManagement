@@ -1,0 +1,27 @@
+package com.indus.training.microservice.dto;
+
+import com.indus.training.microservice.entity.Address;
+import com.indus.training.microservice.entity.Customer;
+
+public class ProfileDTO {
+
+	private Customer customer;
+	private Address address;
+
+	public Customer getCustomer() {
+		return customer;
+	}
+
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
+	}
+
+	public Address getAddress() {
+		return address;
+	}
+
+	public void setAddress(Address address) {
+		this.address = address;
+	}
+
+}

@@ -1,0 +1,145 @@
+version: '3.8'
+
+services:
+  
+  frontend:
+    build:
+      context: V:/IndusTraining/Web/React/project/subscriprionproject  # Absolute path to the frontend directory
+      dockerfile: Dockerfile  # Path to the Dockerfile relative to the context
+    container_name: react-frontend
+    ports:
+      - "3000:3000"
+    networks:
+      - frontend-backend-network  # Connecting only to frontend-backend-network
+    environment:
+      - REACT_APP_API_URL=http://api-gateway:8765  # API Gateway URL
+    depends_on:
+      - api-gateway  # Ensure API Gateway is up before frontend
+
+  # Eureka Service (Service Registry)
+  service-registry:
+    build:
+      context: ./ServiceRegistry
+      dockerfile: Dockerfile
+    container_name: service-registry
+    ports:
+      - "8761:8761"
+    networks:
+      - service-network
+
+  # MySqlContainer
+  mysql-container:
+    image: mysql:8.0
+    container_name: mysql-container
+    environment:
+      MYSQL_HOST: $${MYSQL_HOST:mysql-container}
+      MYSQL_ROOT_PASSWORD: $${MYSQL_ROOT_PASSWORD:Taehyung@3031}
+      MYSQL_DATABASE: $${MYSQL_DATABASE:customer_service_project}
+    networks:
+      - service-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 30s
+      retries: 5
+      start_period: 20s
+      timeout: 10s
+
+  # API Gateway Service
+  api-gateway:
+    build:
+      context: ./APIGatewayService
+      dockerfile: Dockerfile
+    container_name: api-gateway
+    ports:
+      - "8765:8765"  # Exposed for external communication
+    depends_on:
+      - service-registry
+    networks:
+      - service-network
+      - frontend-backend-network
+    environment:
+      - EUREKA_SERVER_URL=http://service-registry:8761/eureka/
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://service-registry:8761/eureka/apps"]
+      interval: 30s
+      retries: 5
+      start_period: 20s
+      timeout: 10s
+
+  # Auth Service
+  auth-service:
+    build:
+      context: ./AuthService
+      dockerfile: Dockerfile
+    container_name: auth-service
+    networks:
+      - service-network
+    environment:
+      - EUREKA_SERVER_URL=http://service-registry:8761/eureka/
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://auth-service/actuator/health"]
+      interval: 30s
+      retries: 5
+      start_period: 20s
+      timeout: 10s
+
+  # Calculation Service
+  calculation-service:
+    build:
+      context: ./CalculationService
+      dockerfile: Dockerfile
+    container_name: calculation-service
+    networks:
+      - service-network
+    environment:
+      - EUREKA_SERVER_URL=http://service-registry:8761/eureka/
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://calculation-service/actuator/health"]
+      interval: 30s
+      retries: 5
+      start_period: 20s
+      timeout: 10s
+
+  # User Service
+  user-service:
+    build:
+      context: ./CustomerService
+      dockerfile: Dockerfile
+    container_name: user-service
+    networks:
+      - service-network
+    environment:
+      - MYSQL_HOST=$${MYSQL_HOST:mysql-container}
+      - MYSQL_PORT=$${MYSQL_PORT:3306}
+      - MYSQL_DATABASE=$${MYSQL_DATABASE:customer_service_project}
+      - MYSQL_USERNAME=$${MYSQL_USERNAME:root}
+      - MYSQL_ROOT_PASSWORD=$${MYSQL_ROOT_PASSWORD:Taehyung@3031}
+      - EUREKA_SERVER_URL=http://service-registry:8761/eureka/
+
+  # Payment Service
+  payment-service:
+    build:
+      context: ./PaymentService
+      dockerfile: Dockerfile
+    container_name: payment-service
+    networks:
+      - service-network
+    environment:
+      - EUREKA_SERVER_URL=http://service-registry:8761/eureka/
+
+  # Subscription Service
+  subscription-service:
+    build:
+      context: ./SubscriptionService
+      dockerfile: Dockerfile
+    container_name: subscription-service
+    networks:
+      - service-network
+    environment:
+      - EUREKA_SERVER_URL=http://service-registry:8761/eureka/
+
+networks:
+  service-network:
+    driver: bridge
+  frontend-backend-network:
+    driver: bridge

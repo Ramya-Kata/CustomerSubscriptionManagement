@@ -1,0 +1,159 @@
+package com.indus.training.microservice;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.indus.training.microservice.entity.Address;
+import com.indus.training.microservice.entity.Customer;
+import com.indus.training.microservice.repo.AddressRepo;
+import com.indus.training.microservice.repo.CustomerRepo;
+
+@SpringBootTest
+@Transactional
+class CustomerServiceApplicationIntegrationTests {
+
+	@Autowired
+	private TestRestTemplate restTemplate;
+
+	@Autowired
+	private CustomerRepo customerRepo;
+
+	@Autowired
+	private AddressRepo addressRepo;
+
+	@BeforeEach
+	void setUp() {
+		customerRepo.deleteAll();
+		addressRepo.deleteAll();
+	}
+
+	@Test
+	void testAddProfile_Success() {
+		// Prepare request payload
+		String payload = """
+				    {
+				        "customer": {
+				            "firstName": "John",
+				            "lastName": "Doe",
+				            "phoneNumber": "1234567890",
+				            "dateOfBirth": "1990-01-01"
+				        },
+				        "address": {
+				            "street": "123 Main St",
+				            "apt": "Apt 101",
+				            "county": "Test County",
+				            "state": "Test State",
+				            "country": "Test Country",
+				            "postalCode": "12345"
+				        }
+				    }
+				""";
+
+		ResponseEntity<Customer> response = restTemplate.postForEntity("/customer/profile/update/test@gmail.com",
+				createHttpEntity(payload), Customer.class);
+
+		// Assertions
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+		assertNotNull(response.getBody());
+		assertEquals("John", response.getBody().getFirstName());
+		assertEquals("123 Main St", response.getBody().getAddrId().getStreet());
+	}
+
+	@Test
+	void testFindProfile_Success() {
+		// Save a customer in the database
+		Address address = new Address();
+		address.setStreet("123 Main St");
+		address.setApt("Apt 101");
+		address.setCounty("Test County");
+		address.setState("Test State");
+		address.setCountry("Test Country");
+		address.setPostalCode("12345");
+
+		addressRepo.save(address);
+
+		Customer customer = new Customer();
+		customer.setGmail("test@gmail.com");
+		customer.setFirstName("John");
+		customer.setLastName("Doe");
+		customer.setAddrId(address);
+
+		customerRepo.save(customer);
+
+		// Make GET request
+		ResponseEntity<Customer> response = restTemplate.getForEntity("/customer/profile/find/test@gmail.com",
+				Customer.class);
+
+		// Assertions
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+		assertNotNull(response.getBody());
+		assertEquals("John", response.getBody().getFirstName());
+		assertEquals("123 Main St", response.getBody().getAddrId().getStreet());
+	}
+
+	@Test
+	void testFindProfile_NotFound() {
+		// Make GET request for a non-existent customer
+		ResponseEntity<String> response = restTemplate.getForEntity("/customer/profile/find/nonexistent@gmail.com",
+				String.class);
+
+		// Assertions
+		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+		assertTrue(response.getBody().contains("Customer not found with email"));
+	}
+
+	@Test
+	void testDeleteProfile_Success() {
+		// Save a customer in the database
+		Address address = new Address();
+		address.setStreet("123 Main St");
+		address.setPostalCode("12345");
+
+		addressRepo.save(address);
+
+		Customer customer = new Customer();
+		customer.setGmail("test@gmail.com");
+		customer.setFirstName("John");
+		customer.setAddrId(address);
+
+		customerRepo.save(customer);
+
+		// Make DELETE request
+		ResponseEntity<Boolean> response = restTemplate.exchange("/customer/profile/delete/test@gmail.com",
+				HttpMethod.DELETE, null, Boolean.class);
+
+		// Assertions
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+		assertTrue(response.getBody());
+	}
+
+	@Test
+	void testDeleteProfile_NotFound() {
+		// Make DELETE request for a non-existent customer
+		ResponseEntity<String> response = restTemplate.exchange("/customer/profile/delete/nonexistent@gmail.com",
+				HttpMethod.DELETE, null, String.class);
+
+		// Assertions
+		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+		assertTrue(response.getBody().contains("Customer not found with email"));
+	}
+
+	private HttpEntity<String> createHttpEntity(String payload) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		return new HttpEntity<>(payload, headers);
+	}
+
+}

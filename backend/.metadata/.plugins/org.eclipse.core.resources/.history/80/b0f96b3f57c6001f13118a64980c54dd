@@ -1,0 +1,16 @@
+spring.application.name=AuthenticationService
+server.port=8000
+spring.data.mongodb.uri=mongodb://localhost:27017/testdb
+spring.data.mongodb.database=authenticationdb
+#spring.data.mongodb.uri=mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.3.2
+
+spring.security.user.name=ramya69
+spring.security.user.password=Taehyung@3031
+
+
+spring.security.oauth2.client.registration.google.client-id= 1091430395987-na4rgoglroedk4na99rj77ce008i6r6i.apps.googleusercontent.com
+spring.security.oauth2.client.registration.google.client-secret= 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
+
+spring.security.oauth2.client.registration.github.client-id= Ov23liWiJDPslpW9lIBd
+spring.security.oauth2.client.registration.github.client-secret= 47d5c2e82a91d262f18362a6ff3040c5461800a2
+

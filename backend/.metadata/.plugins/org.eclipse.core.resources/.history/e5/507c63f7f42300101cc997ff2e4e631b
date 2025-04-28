@@ -1,0 +1,45 @@
+package com.ramykata.microservice.impl;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+
+import com.indus.training.microservice.repo.UserRepo;
+import com.ramya.kata.microservice.entity.UserPrinciple;
+import com.ramya.kata.microservice.entity.Users;
+
+@Service
+public class MyUserDetailsService implements UserDetailsService {
+
+	@Autowired
+	private UserRepo repo;
+
+	private final Map<String, UserDetails> userCache = new ConcurrentHashMap<>();
+
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		Users user = repo.findByUsername(username);
+
+		if (user == null) {
+			throw new UsernameNotFoundException("User not found");
+		}
+
+		System.out.println("User fetched: " + user);
+		return new UserPrinciple(user);
+	}
+
+	public UserDetails fetchUserName(String username) {
+		if (userCache.containsKey(username)) {
+			System.out.println("Cache hit for user: " + username);
+		} else {
+			System.out.println("Cache miss for user: " + username);
+		}
+		return userCache.computeIfAbsent(username, this::loadUserByUsername);
+	}
+
+}

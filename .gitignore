@@ -1,0 +1,39 @@
+# ===========================
+# Java / Maven backend ignores
+# ===========================
+/backend/target/
+*.class
+*.jar
+*.war
+*.ear
+
+# Maven specific
+/backend/.mvn/
+backend/mvnw
+backend/mvnw.cmd
+
+# IDE specific
+/.idea/
+/backend/.idea/
+/backend/*.iml
+/.project
+/.classpath
+/.settings/
+/.metadata/
+
+# Logs
+*.log
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# ===========================
+# Frontend (React/Angular/Vue) ignores
+# ===========================
+/frontend/node_modules/
+/frontend/build/
+/frontend/dist/
+
+# Environment files
+/frontend/.env

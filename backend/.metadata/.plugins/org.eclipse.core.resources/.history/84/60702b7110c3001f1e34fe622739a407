@@ -1,0 +1,15 @@
+package com.indus.training.microservice.dao;
+
+import com.indus.training.microservice.entity.Account;
+import com.indus.training.microservice.exception.BankException;
+
+public interface AccountService {
+
+	public Boolean saveAccount(Account account) throws BankException;
+
+	public Account getCustomerByAccountNumber(String accountNumber) throws BankException;
+
+	public Boolean updateAmount(Account account, Double amount, Boolean isDeposit) throws BankException;
+
+	public Boolean deleteAccount(Account account) throws BankException;
+}

@@ -1,0 +1,101 @@
+package com.indus.training.microservice.impl;
+
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.indus.training.microservice.dao.MobileService;
+import com.indus.training.microservice.entity.MobilePlan;
+import com.indus.training.microservice.exception.SubscriptionException;
+import com.indus.training.microservice.repo.MobilePlanRepo;
+
+@Service
+public class MobileDao implements MobileService {
+
+	@Autowired
+	private MobilePlanRepo mobileRepo;
+
+	@Override
+	@CacheEvict(value = "mobilePlans", allEntries = true)
+	@Transactional
+	public MobilePlan addOrUpdateMobilePlan(MobilePlan plan) throws SubscriptionException {
+
+		try {
+			if (plan == null) {
+				throw new SubscriptionException("Mobile plan cannot be null");
+			}
+			
+			Optional<MobilePlan> existingPlanOpt = mobileRepo.findById(plan.getId());
+			
+			System.out.println("Plan ID: " + plan.getId());
+			if (!existingPlanOpt.isPresent()) {
+	            // Plan does not exist, so we insert a new one
+	            return mobileRepo.save(plan);
+	        } else {
+	            // Plan exists, so we update it
+	            MobilePlan existingPlan = existingPlanOpt.get();
+
+	            // Update the fields of the existing plan
+	            existingPlan.setPlanName(plan.getPlanName());
+	            existingPlan.setDataLimit(plan.getDataLimit());
+	            existingPlan.setCallMinutes(plan.getCallMinutes());
+	            existingPlan.setTextLimit(plan.getTextLimit());
+	            existingPlan.setMonthlyCost(plan.getMonthlyCost());
+	            existingPlan.setDiscount(plan.getDiscount());
+
+	            // Save the updated plan and return
+	            return mobileRepo.saveAndFlush(existingPlan);
+	        }
+		} catch (IllegalArgumentException ex) {
+			throw new SubscriptionException("Invalid input: " + ex.getMessage());
+		} catch (Exception ex) {
+			throw new SubscriptionException("An unexpected error occurred while saving the plan: " + ex.getMessage());
+		}
+	}
+
+	@Override
+	@CacheEvict(value = "mobilePlans", allEntries = true)
+	public Boolean deleteMobilePlan(Long id) throws SubscriptionException {
+
+		try {
+			if (id == null) {
+				throw new SubscriptionException("Mobile plan ID cannot be null");
+			}
+			if (!mobileRepo.existsById(id)) {
+				throw new SubscriptionException("Mobile plan with ID " + id + " not found");
+			}
+			mobileRepo.deleteById(id);
+			return true;
+		} catch (Exception ex) {
+			throw new SubscriptionException("An error occurred while deleting the plan: " + ex.getMessage());
+		}
+	}
+
+	@Override
+	@Cacheable(value = "mobilePlans")
+	public Page<MobilePlan> getAllPlans(int pageNumber, int pageSize, String sortBy, String direction)
+			throws SubscriptionException {
+		try {
+
+			Sort sort = Sort.by(Sort.Order.by(sortBy));
+			if ("desc".equalsIgnoreCase(direction)) {
+				sort = Sort.by(Sort.Order.desc(sortBy));
+			}
+
+			Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
+
+			return mobileRepo.findAll(pageable);
+		} catch (Exception ex) {
+			throw new SubscriptionException("An error occurred while retrieving the plans: " + ex.getMessage());
+		}
+	}
+
+}

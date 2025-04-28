@@ -1,0 +1,9 @@
+package com.indus.training.microservice.repo;
+
+import org.springframework.data.repository.PagingAndSortingRepository;
+
+import com.indus.training.microservice.entity.WifiPlan;
+
+public interface WifiPlanRepo extends PagingAndSortingRepository<WifiPlan, Long> {
+
+}

@@ -1,0 +1,15 @@
+package com.indus.training.microservice.dao;
+
+import com.indus.training.microservice.entity.Address;
+import com.indus.training.microservice.entity.Customer;
+import com.indus.training.microservice.exception.CustomerException;
+
+public interface ProfileService {
+
+	public Customer saveOrUpdateProfile(String gmail, Customer customer, Address address) throws CustomerException;
+
+	public Customer findProfile(String gmail) throws CustomerException;
+
+	public Boolean deleteProfile(String gmail) throws CustomerException;
+
+}

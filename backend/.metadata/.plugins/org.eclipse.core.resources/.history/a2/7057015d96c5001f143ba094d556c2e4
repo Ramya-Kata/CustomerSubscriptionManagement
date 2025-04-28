@@ -1,0 +1,9 @@
+package com.indus.training.microservice.svc;
+
+import com.indus.training.microservice.exception.CalculationException;
+
+@FunctionalInterface
+public interface ITaxCalculation {
+
+	public double calculateTax(double amount) throws CalculationException;
+}

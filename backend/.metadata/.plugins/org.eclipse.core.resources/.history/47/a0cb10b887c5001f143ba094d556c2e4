@@ -1,0 +1,9 @@
+package com.indus.training.microservice.repo;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.indus.training.microservice.entity.WifiPlan;
+
+public interface WifiPlanRepo extends JpaRepository<WifiPlan, Long> {
+
+}

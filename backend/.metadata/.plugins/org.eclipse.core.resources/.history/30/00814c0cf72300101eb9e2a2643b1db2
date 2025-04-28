@@ -1,0 +1,46 @@
+package com.indus.training.microservice.dao;
+
+import com.ramyakata.microservice.dto.ProfileDTO;
+import com.ramyakata.microservice.entity.Address;
+import com.ramyakata.microservice.entity.Customer;
+import com.ramyakata.microservice.exception.CustomerException;
+
+/**
+ * Interface defining the business operations for managing customer profiles.
+ * Includes methods for creating, updating, retrieving, and deleting profiles.
+ */
+public interface ProfileService {
+
+	/**
+	 * Description: Creates or updates a customer profile.
+	 *
+	 * @param gmail    The email of the customer.
+	 * @param customer The customer details to save or update.
+	 * @param address  The address details to save or update.
+	 * @return The updated or newly created customer entity.
+	 * @throws CustomerException If any validation or processing errors occur.
+	 */
+	public Customer saveOrUpdateProfile(String gmail, Customer customer, Address address) throws CustomerException;
+
+	/**
+	 * Description: Retrieves a customer profile by email.
+	 *
+	 * @param gmail The email of the customer to retrieve.
+	 * @return The customer entity associated with the given email.
+	 * @throws CustomerException If the email is invalid or the customer does not
+	 *                           exist.
+	 */
+	public Customer findProfile(String gmail) throws CustomerException;
+
+	/**
+	 * Description: Deletes a customer profile by email.
+	 *
+	 * @param gmail The email of the customer to delete.
+	 * @return True if the profile was successfully deleted; false otherwise.
+	 * @throws CustomerException If any errors occur during the deletion process.
+	 */
+	public Boolean deleteProfile(String gmail) throws CustomerException;
+
+//	public ProfileDTO findAll() throws CustomerException;
+
+}

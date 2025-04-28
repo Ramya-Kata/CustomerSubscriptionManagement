@@ -1,0 +1,161 @@
+package com.ramyakata.microservice;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.*;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.ramyakata.microservice.entity.Address;
+import com.ramyakata.microservice.entity.Customer;
+import com.ramyakata.microservice.exception.CustomerException;
+import com.ramyakata.microservice.repo.AddressRepo;
+import com.ramyakata.microservice.repo.CustomerRepo;
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+class CustomerServiceApplicationIntegrationTests {
+
+	@Autowired
+	private TestRestTemplate restTemplate;
+
+	@Autowired
+	private CustomerRepo customerRepo;
+
+	@Autowired
+	private AddressRepo addressRepo;
+
+	@BeforeEach
+	void setUp() {
+		customerRepo.deleteAll();
+		addressRepo.deleteAll();
+	}
+
+	@Test
+	void testAddProfile_Success() {
+		// Prepare request payload
+		String payload = """
+				    {
+				        "customer": {
+				            "firstName": "Test",
+				            "lastName": "Take",
+				            "phoneNumber": "1234567890",
+				            "dateOfBirth": "2000-05-30"
+				        },
+				        "address": {
+				            "street": "123 Test St",
+				            "apt": "Apt 101",
+				            "county": "Test County",
+				            "state": "Test State",
+				            "country": "Test Country",
+				            "postalCode": "12345"
+				        }
+				    }
+				""";
+
+		ResponseEntity<Customer> response = restTemplate.postForEntity("/customer/profile/update/test@gmail.com",
+				createHttpEntity(payload), Customer.class);
+
+		// Assertions
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+		assertNotNull(response.getBody());
+		assertEquals("Test", response.getBody().getFirstName());
+		assertEquals("123 Test St", response.getBody().getAddrId().getStreet());
+	}
+
+	@Test
+	void testFindProfile_Success() {
+		// Save an address
+		Address address = new Address();
+		address.setStreet("123 Test St");
+		address.setApt("Apt 101");
+		address.setCounty("Test County");
+		address.setState("Test State");
+		address.setCountry("Test Country");
+		address.setPostalCode("12345");
+		addressRepo.save(address);
+
+		// Save a customer
+		Customer customer = new Customer();
+		customer.setGmail("test@gmail.com");
+		customer.setFirstName("Test");
+		customer.setLastName("Take");
+		customer.setAddrId(address);
+		customerRepo.save(customer);
+
+		// Make GET request
+		ResponseEntity<Customer> response = restTemplate.getForEntity("/customer/profile/find/test@gmail.com",
+				Customer.class);
+
+		// Assertions
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+		assertNotNull(response.getBody());
+		assertEquals("Test", response.getBody().getFirstName());
+		assertEquals("123 Test St", response.getBody().getAddrId().getStreet());
+	}
+
+	@Test
+	void testFindProfile_NotFound() {
+		ResponseEntity<String> response = restTemplate.getForEntity("/customer/profile/find/nonexistent@gmail.com",
+				String.class);
+
+		// Assertions
+		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+		assertNotNull(response.getBody());
+		assertTrue(response.getBody().contains("Customer not found with email"));
+	}
+
+//	@Test
+//	void testDeleteProfile_Success() {
+//		// Set up test data
+//		Address address = new Address();
+//		address.setStreet("123 Test St");
+//		addressRepo.saveAndFlush(address);
+//
+//		Customer customer = new Customer();
+//		customer.setGmail("test@gmail.com");
+//		customer.setFirstName("Test");
+//		customer.setLastName("Take");
+//		customer.setAddrId(address);
+//		customerRepo.saveAndFlush(customer);
+//
+//		System.out.println("Before deletion: Customers = " + customerRepo.findAll());
+//		System.out.println("Before deletion: Addresses = " + addressRepo.findAll());
+//
+//		// Perform DELETE request
+//		ResponseEntity<String> response = restTemplate.exchange("/customer/profile/delete/test@gmail.com",
+//				HttpMethod.DELETE, null, String.class);
+//
+//		// Assertions
+//		assertEquals(HttpStatus.OK, response.getStatusCode());
+//		assertNotNull(response.getBody());
+//		assertTrue(response.getBody().contains("Success"));
+//
+//		System.out.println("After deletion: Customers = " + customerRepo.findAll());
+//		System.out.println("After deletion: Addresses = " + addressRepo.findAll());
+//
+//		// Verify customer and address are deleted
+//		assertFalse(customerRepo.findById(customer.getId()).isPresent());
+//		assertFalse(addressRepo.findById(address.getId()).isPresent());
+//	}
+
+	@Test
+	void testDeleteProfile_NotFound() {
+		ResponseEntity<String> response = restTemplate.exchange("/customer/profile/delete/nonexistent@gmail.com",
+				HttpMethod.DELETE, null, String.class);
+
+		// Assertions
+		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+		assertNotNull(response.getBody());
+		assertTrue(response.getBody().contains("Customer not found with email"));
+	}
+
+	private HttpEntity<String> createHttpEntity(String payload) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		return new HttpEntity<>(payload, headers);
+	}
+}

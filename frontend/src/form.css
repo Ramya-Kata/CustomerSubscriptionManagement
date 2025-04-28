@@ -1,0 +1,90 @@
+
+.body {
+    display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  height: 100vh;
+  background: linear-gradient(-180deg, #6e528ba8, #2c0245);
+  color: #fdfcfd;
+  font-family: "Euclid Circular A", "Poppins";
+}
+.form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 90vw;
+    max-width: 400px;
+    padding: 40px;
+    background: #fdfcfd;
+    border-radius: 12px;
+    box-shadow: 0 100px 100px rgba(63, 5, 66, 0.815);
+    text-align: center;
+}
+
+.form-container h2 {
+    margin-bottom: 20px;
+    font-size: 28px;
+    color: black;
+    font-weight: bold;
+}
+
+.logo {
+    max-width: 50px; /* Adjust size as needed */
+    height: auto;
+    margin-left: 0px; /* Adds spacing between the heading and the image */
+    vertical-align:text-bottom; /* Aligns image with the heading text */
+    border-radius: 50%; /* Makes the image circular */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Adds a shadow for better visibility */
+    transition: transform 0.3s; /* Smooth hover effect */
+}
+
+.logo:hover {
+    transform: scale(1.1); /* Slight zoom-in effect on hover */
+}
+
+
+.input-group {
+    color: black;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+
+.input-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #060606;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    box-sizing: border-box;
+    background: #f9f9f9;
+}
+
+
+
+button {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: #342876;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #559ac0;
+}

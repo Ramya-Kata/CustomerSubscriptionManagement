@@ -1,0 +1,15 @@
+package com.ramyakata.microservice.repo;
+
+import org.bson.types.ObjectId;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.stereotype.Repository;
+
+import com.ramyakata.microservice.entity.Users;
+
+@Repository
+public interface UserRepo extends MongoRepository<Users, ObjectId> {
+
+	Users findByUsername(String username);
+
+	Users findByEmail(String email);
+}

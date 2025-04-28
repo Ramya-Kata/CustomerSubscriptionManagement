@@ -1,0 +1,10 @@
+package com.indus.training.microservice.repo;
+
+
+import org.springframework.data.repository.PagingAndSortingRepository;
+
+import com.indus.training.microservice.entity.TvPlan;
+
+public interface TvPlanRepo extends PagingAndSortingRepository<TvPlan, Long>{
+
+}

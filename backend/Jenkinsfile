@@ -1,0 +1,53 @@
+pipeline {
+    agent { label 'Agent-1' }  // Runs on Jenkins Agent
+
+    stages {
+        stage('Checkout Code') {
+            steps {
+                git branch: 'main', url: 'https://github.com/Ramya3031/customer-subscription-project.git'
+            }
+        }
+
+        stage('Build Services') {
+            steps {
+                sh 'cd ServiceRegistry && mvn clean package -DskipTests'
+                sh 'cd APIGatewayService && mvn clean package -DskipTests'
+                sh 'cd AuthService && mvn clean package -DskipTests'
+                sh 'cd CustomerService && mvn clean package -DskipTests'
+                sh 'cd SubscriptionService && mvn clean package -DskipTests'
+                sh 'cd CalculationService && mvn clean package -DskipTests'
+                sh 'cd PaymentService && mvn clean package -DskipTests'
+            }
+        }
+
+        stage('Start Service Registry') {
+            steps {
+                sh 'nohup java -jar ServiceRegistry/target/ServiceRegistry-0.0.1-SNAPSHOT.jar > logs/service-registry.log 2>&1 &'
+                sleep time: 15, unit: 'SECONDS'
+            }
+        }
+
+        stage('Start API Gateway') {
+            steps {
+                sh 'nohup java -jar APIGatewayService/target/APIGatewayService-0.0.1-SNAPSHOT.jar  > logs/api-gateway.log 2>&1 &'
+                sleep time: 10, unit: 'SECONDS'
+            }
+        }
+
+        stage('Start Core Services') {
+            steps {
+                sh 'nohup java -jar AuthService/target/AuthService-0.0.1-SNAPSHOT.jar > logs/auth.log 2>&1 &'
+                sh 'nohup java -jar CustomerService/target/UserService-0.0.1-SNAPSHOT.jar > logs/customer.log 2>&1 &'
+                sh 'nohup java -jar SubscriptionService/target/SubscriptionService-0.0.1-SNAPSHOT.jar > logs/subscription.log 2>&1 &'
+                sleep time: 10, unit: 'SECONDS'
+            }
+        }
+
+        stage('Start Business Services') {
+            steps {
+                sh 'nohup java -jar CalculationService/target/CalculationService-1-0.0.1-SNAPSHOT.jar > logs/calculation.log 2>&1 &'
+                sh 'nohup java -jar PaymentService/target/PaymentService-0.0.1-SNAPSHOT.jar > logs/payment.log 2>&1 &'
+            }
+        }
+    }
+}

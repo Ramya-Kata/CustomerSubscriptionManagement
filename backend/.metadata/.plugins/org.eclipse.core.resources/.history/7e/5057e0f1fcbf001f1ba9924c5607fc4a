@@ -1,0 +1,43 @@
+package com.indus.training.microservice.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.indus.training.microservice.dao.AccountService;
+import com.indus.training.microservice.entity.Account;
+import com.indus.training.microservice.exception.BankException;
+
+@RestController
+@RequestMapping("/account")
+public class AccountController {
+
+	@Autowired
+	private AccountService accountServiceObj;
+
+	@PostMapping("/add")
+	public ResponseEntity<String> addAccount(@RequestBody Account account) throws BankException {
+		Boolean isSaved = accountServiceObj.saveAccount(account);
+		if (isSaved) {
+			return ResponseEntity.status(201).body("Account created successfully.");
+		} else {
+			return ResponseEntity.status(400).body("Account creation failed.");
+		}
+	}
+
+	@GetMapping("/search/{accountNumber}")
+	public ResponseEntity<Account> getAccountById(@PathVariable String accountNumber) throws BankException {
+		Account account = accountServiceObj.getCustomerByAccountNumber(accountNumber);
+		if (account != null) {
+			return ResponseEntity.ok(account);
+		} else {
+			return ResponseEntity.status(404).body(null); // Not found
+		}
+	}
+
+}

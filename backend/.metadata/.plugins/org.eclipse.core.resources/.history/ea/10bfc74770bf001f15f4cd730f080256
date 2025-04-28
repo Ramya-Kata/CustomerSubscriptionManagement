@@ -1,0 +1,37 @@
+package com.indus.training.microservice.impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.indus.training.microservice.dao.WifiService;
+import com.indus.training.microservice.entity.WifiPlan;
+import com.indus.training.microservice.exception.SubscriptionException;
+import com.indus.training.microservice.repo.WifiPlanRepo;
+
+@Service
+public class WifiDao implements WifiService {
+
+	@Autowired
+	private WifiPlanRepo wifiRepo;
+
+	@Override
+	public WifiPlan addOrUpdateWifiPlan(WifiPlan plan) throws SubscriptionException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Boolean deleteWifiPlan(Long id) throws SubscriptionException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<WifiPlan> getAllPlans() throws SubscriptionException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

@@ -1,0 +1,42 @@
+package com.indus.training.microservice.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.indus.training.microservice.dao.WifiService;
+import com.indus.training.microservice.entity.WifiPlan;
+import com.indus.training.microservice.exception.SubscriptionException;
+
+@RestController
+@RequestMapping("/plan/wifi")
+public class WifiController {
+
+	@Autowired
+	private WifiService wifiService;
+
+	@PostMapping("/update")
+	public WifiPlan addOrUpdateMobilePlan(@RequestBody WifiPlan plan) throws SubscriptionException {
+		return wifiService.addOrUpdateWifiPlan(plan);
+	}
+
+	@DeleteMapping("/delete/{id}")
+	public Boolean deleteMobilePlan(@PathVariable Long id) throws SubscriptionException {
+		return wifiService.deleteWifiPlan(id);
+	}
+
+	@GetMapping("/get/all")
+	public Page<WifiPlan> getAllMobilePlans(@RequestParam(defaultValue = "0") int pageNumber,
+			@RequestParam(defaultValue = "10") int pageSize, @RequestParam(defaultValue = "Id") String sortBy,
+			@RequestParam(defaultValue = "ASC") String direction) throws SubscriptionException {
+
+		return wifiService.getAllPlans(pageNumber, pageSize, sortBy, direction);
+	}
+}

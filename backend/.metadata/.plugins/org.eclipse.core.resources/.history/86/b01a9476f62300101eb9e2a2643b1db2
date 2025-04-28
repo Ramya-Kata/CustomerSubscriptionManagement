@@ -1,0 +1,49 @@
+package com.ramyakata.microservice.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.ramya.kata.microservice.dto.UserDto;
+import com.ramya.kata.microservice.entity.Users;
+import com.ramya.kata.microservice.exception.AuthException;
+import com.ramyakata.microservice.dao.AuthService;
+
+@RestController
+@RequestMapping("/auth")
+public class AuthController {
+
+	@Autowired
+	public AuthService authService;
+
+	@GetMapping("/find/{username}")
+	public ResponseEntity<UserDto> userByGmail(@PathVariable String username) throws AuthException {
+		System.out.println("Searching for user with email: " + username);
+		UserDto user = authService.getByUserName(username);
+		if (user != null) {
+			return ResponseEntity.ok(user); // Return the user data
+		} else {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // Handle no user found
+		}
+
+	}
+
+	@PostMapping("/register")
+	public Boolean insertion(@RequestBody Users user) throws AuthException {
+		return authService.insert(user);
+
+	}
+
+	@PostMapping("/login")
+	public String login(@RequestBody Users user) throws AuthException {
+//		return "Success.!! Welcome "+user;
+		return authService.verify(user);
+	}
+}

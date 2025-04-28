@@ -1,0 +1,146 @@
+/* Profile container styling */
+.profile-container {
+    margin: auto;
+    padding: 20px;
+    max-width: 700px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Heading styling */
+  .profile-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #4A4A4A;
+    font-weight: 600;
+  }
+  
+  /* Dropdown menu styling */
+  .profile-dropdown {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+  }
+  
+  .profile-dropdown select {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    background: #f8f8f8;
+    cursor: pointer;
+    color: #333;
+    transition: all 0.3s ease;
+  }
+  
+  .profile-dropdown select:hover {
+    background: #e6e6e6;
+    border-color: #ccc;
+  }
+  
+  /* Profile details styling */
+  .profile-details {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .profile-details p {
+    margin: 0;
+    line-height: 1.6;
+    font-size: 16px;
+    color: #555;
+  }
+  
+  .profile-details p strong {
+    color: #333;
+  }
+  
+  /* Update form styling */
+  .update-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+  
+  .update-form label {
+    display: flex;
+    flex-direction: column;
+    font-size: 14px;
+    color: #555;
+  }
+  
+  .update-form input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+  }
+  
+  .update-form input:focus {
+    border-color: #6c63ff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(108, 99, 255, 0.5);
+  }
+  
+  .update-form button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    background-color: #421b44;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .update-form button:hover {
+    background-color: #4f304a;
+  }
+  
+  /* Address section in view profile */
+  .address-section p {
+    margin: 0;
+    font-size: 14px;
+    color: #777;
+  }
+  
+  /* Ensure content stretches to push the footer down */
+  body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  
+  main {
+    flex: 1;
+  }
+  
+
+  .go-back-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #4b295a;
+    
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .go-back-button:hover {
+    color: white;
+    background-color: #3b0f49;
+   
+  }
+  

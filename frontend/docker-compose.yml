@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: .  # Assuming Dockerfile is in the frontend directory
+      dockerfile: Dockerfile
+    container_name: react-frontend
+    ports:
+      - "3000:3000"
+    networks:
+      - frontend-backend-network  # Connecting only to frontend-backend-network
+    environment:
+      - REACT_APP_API_URL=http://api-gateway:8765  # API Gateway URL
+    depends_on:
+      - api-gateway
+
+networks:
+  frontend-backend-network:
+     external: true

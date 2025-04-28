@@ -1,0 +1,130 @@
+package com.ramyakata.microservice;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Date;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.ramyakata.microservice.entity.Address;
+import com.ramyakata.microservice.entity.Customer;
+import com.ramyakata.microservice.exception.CustomerException;
+import com.ramyakata.microservice.impl.ProfileDao;
+
+@SpringBootTest
+@Transactional
+class CustomerServiceApplicationTests {
+
+	@Autowired
+	private ProfileDao profileDao;
+
+	private Customer customer;
+	private Address address;
+
+	@BeforeEach
+	void setUp() {
+		// Initialize test data
+		customer = new Customer();
+		customer.setGmail("test@gmail.com");
+		customer.setFirstName("Test");
+		customer.setLastName("Take");
+		customer.setPhoneNumber("1234567890");
+		customer.setDateOfBirth(new Date());
+
+		address = new Address();
+		address.setStreet("123 Main St");
+		address.setApt("Apt 101");
+		address.setCounty("Test County");
+		address.setState("Test State");
+		address.setCountry("Test Country");
+		address.setPostalCode("12345");
+	}
+
+	@Test
+	void testSaveOrUpdateProfile_NewCustomer_Success() throws CustomerException {
+		Customer savedCustomer = profileDao.saveOrUpdateProfile("test@gmail.com", customer, address);
+
+		assertNotNull(savedCustomer.getId());
+		assertEquals("Test", savedCustomer.getFirstName());
+		assertEquals("Test County", savedCustomer.getAddrId().getCounty());
+	}
+
+	@Test
+	void testSaveOrUpdateProfile_UpdateExistingCustomer_Success() throws CustomerException {
+		profileDao.saveOrUpdateProfile("test@gmail.com", customer, address);
+
+		// Update customer details
+		customer.setFirstName("Update");
+		customer.setLastName("Test");
+		address.setStreet("456 Updated St");
+
+		Customer updatedCustomer = profileDao.saveOrUpdateProfile("test@gmail.com", customer, address);
+
+		assertEquals("Update", updatedCustomer.getFirstName());
+		assertEquals("456 Updated St", updatedCustomer.getAddrId().getStreet());
+	}
+
+	@Test
+	void testSaveOrUpdateProfile_MissingCustomer_ThrowsException() {
+		CustomerException exception = assertThrows(CustomerException.class, () -> {
+			profileDao.saveOrUpdateProfile("test@gmail.com", null, address);
+		});
+
+		assertEquals("Customer details are missing.", exception.getMessage());
+	}
+
+	@Test
+	void testSaveOrUpdateProfile_MissingAddress_ThrowsException() {
+		CustomerException exception = assertThrows(CustomerException.class, () -> {
+			profileDao.saveOrUpdateProfile("test@gmail.com", customer, null);
+		});
+
+		assertEquals("Address details are missing.", exception.getMessage());
+	}
+
+	@Test
+	void testFindProfile_Success() throws CustomerException {
+		profileDao.saveOrUpdateProfile("test@gmail.com", customer, address);
+
+		Customer foundCustomer = profileDao.findProfile("test@gmail.com");
+
+		assertNotNull(foundCustomer);
+		assertEquals("Test", foundCustomer.getFirstName());
+	}
+
+	@Test
+	void testFindProfile_NotFound_ThrowsException() {
+		CustomerException exception = assertThrows(CustomerException.class, () -> {
+			profileDao.findProfile("nonexistent@gmail.com");
+		});
+
+		assertEquals("Customer not found with email: nonexistent@gmail.com", exception.getMessage());
+	}
+
+	@Test
+	void testDeleteProfile_Success() throws CustomerException {
+		profileDao.saveOrUpdateProfile("test@gmail.com", customer, address);
+
+		boolean isDeleted = profileDao.deleteProfile("test@gmail.com");
+
+		assertTrue(isDeleted);
+		assertThrows(CustomerException.class, () -> profileDao.findProfile("test@gmail.com"));
+	}
+
+	@Test
+	void testDeleteProfile_NotFound_ThrowsException() {
+		CustomerException exception = assertThrows(CustomerException.class, () -> {
+			profileDao.deleteProfile("nonexistent@gmail.com");
+		});
+
+		assertTrue(exception.getMessage().contains("not found"));
+	}
+
+}

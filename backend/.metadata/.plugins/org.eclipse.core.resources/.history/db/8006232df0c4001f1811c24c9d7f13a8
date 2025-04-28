@@ -1,0 +1,115 @@
+package com.indus.training.microservice.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.indus.training.microservice.dao.ProfileService;
+import com.indus.training.microservice.entity.Address;
+import com.indus.training.microservice.entity.Customer;
+import com.indus.training.microservice.exception.CustomerException;
+import com.indus.training.microservice.repo.AddressRepo;
+import com.indus.training.microservice.repo.CustomerRepo;
+
+import jakarta.persistence.EntityNotFoundException;
+
+@Service
+public class ProfileDao implements ProfileService {
+
+	@Autowired
+	private CustomerRepo customerRepo;
+
+	@Autowired
+	private AddressRepo addressRepo;
+
+	@Override
+	@Transactional(propagation = Propagation.REQUIRED, timeout = 3, rollbackFor = CustomerException.class)
+	@CacheEvict(value = "customers", key = "#gmail")
+	public Customer saveOrUpdateProfile(String gmail, Customer customer, Address address) throws CustomerException {
+
+		if (address == null) {
+			throw new CustomerException("Address details are missing.");
+		}
+		if (customer == null) {
+			throw new CustomerException("Customer details are missing.");
+		}
+
+		Customer existingCustomer = null;
+		try {
+			existingCustomer = findProfile(gmail);
+		} catch (CustomerException e) {
+
+			existingCustomer = null; 
+		}
+		try {
+			if (existingCustomer != null) {
+				existingCustomer.setFirstName(customer.getFirstName());
+				existingCustomer.setLastName(customer.getLastName());
+				existingCustomer.setGmail(gmail);
+				existingCustomer.setPhoneNumber(customer.getPhoneNumber());
+				existingCustomer.setDateOfBirth(customer.getDateOfBirth());
+				addressRepo.save(address);
+				existingCustomer.setAddrId(address);
+
+				return customerRepo.save(existingCustomer);
+			} else {
+				addressRepo.save(address);
+				customer.setGmail(gmail);
+				customer.setAddrId(address);
+				return customerRepo.save(customer);
+			}
+		} catch (Exception e) {
+			throw new CustomerException("An unexpected error occurred while saving or updating the profile.");
+		}
+
+	}
+
+	@Cacheable(value = "customers", key = "#gmail")
+	@Override
+	public Customer findProfile(String gmail) throws CustomerException {
+
+		if (gmail == null) {
+			throw new CustomerException("Gmail is required to fetch customer details.");
+		}
+
+		try {
+			Customer currentCustomer = customerRepo.getByGmail(gmail);
+			if (currentCustomer == null) {
+				throw new CustomerException("Customer not found with email: " + gmail);
+			}
+			return currentCustomer;
+		} catch (EntityNotFoundException e) {
+			throw new CustomerException("Customer not found: " + e.getMessage());
+		}
+
+	}
+
+	@Transactional
+	@Override
+	public Boolean deleteProfile(String gmail) throws CustomerException {
+
+		if (gmail == null) {
+			throw new CustomerException("Gmail is required to delete the profile.");
+		}
+
+		try {
+			Customer existingCustomer = customerRepo.getByGmail(gmail);
+			if (existingCustomer == null) {
+				throw new CustomerException("Customer not found with email: " + gmail);
+			}
+			customerRepo.deletByGmail(gmail);
+			
+		} catch (DataIntegrityViolationException e) {
+			throw new CustomerException("Couldn't delete profile due to data integrity issues." + e.getMessage());
+		} catch (Exception e) {
+			throw new CustomerException("Couldn't delete profile due to an unknown error" + e.getMessage());
+		}
+		return true;
+
+	}
+
+}

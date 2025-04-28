@@ -1,0 +1,115 @@
+spring.application.name=APIGatewayService
+
+server.port = 8765
+eureka.client.serviceUrl.defaultZone=http://service-registry:8761/eureka/
+#eureka.client.service-url.defaultZone=${EUREKA_SERVER_URL:http://localhost:8761/eureka/}
+
+
+server.cloud.gateway.discovery.locator.enabled=true
+
+logging.level.org.springframework.http.server.reactive=DEBUG
+#spring.cloud.gateway.default-filters[0]=CircuitBreaker=name=globalCircuitBreaker,fallbackUri=forward:/fallback/global
+#spring.cloud.gateway.default-filters[1].name=JwtValidationFilter
+
+# Logging for debugging
+logging.level.org.springframework.cloud.gateway=DEBUG
+
+## Resilience4j configurations
+#resilience4j.circuitbreaker.instances.globalCircuitBreaker.slidingWindowSize=10
+#resilience4j.circuitbreaker.instances.globalCircuitBreaker.failureRateThreshold=50
+#resilience4j.circuitbreaker.instances.globalCircuitBreaker.waitDurationInOpenState=5000
+
+spring.cloud.gateway.default-filters[0].name=JwtValidationFilter
+logging.file.name=src/main/resources/logs/application.log
+logging.level.root=DEBUG
+#spring.cloud.gateway.default-filters[1].name=CircuitBreaker
+#spring.cloud.gateway.default-filters[1].args.name=globalCircuitBreaker
+#spring.cloud.gateway.default-filters[1].args.fallbackUri=forward:/fallback/global
+
+# CUSTOMER-SERVICE
+spring.cloud.gateway.routes[0].id=customer-service-user-update
+spring.cloud.gateway.routes[0].uri=lb://CUSTOMER-SERVICE
+spring.cloud.gateway.routes[0].predicates[0]=Path=/customer/profile/update/**
+spring.cloud.gateway.routes[0].metadata.roles=USER
+
+spring.cloud.gateway.routes[1].id=customer-service-admin-find
+spring.cloud.gateway.routes[1].uri=lb://CUSTOMER-SERVICE
+spring.cloud.gateway.routes[1].predicates[0]=Path=/customer/profile/find/**
+spring.cloud.gateway.routes[1].metadata.roles=ADMIN,USER
+
+# PLAN-SERVICE - Mobile Plans
+spring.cloud.gateway.routes[2].id=plan-service-mobile-get-all
+spring.cloud.gateway.routes[2].uri=lb://PLAN-SERVICE
+spring.cloud.gateway.routes[2].predicates[0]=Path=/plan/mobile/get/all
+spring.cloud.gateway.routes[2].metadata.roles=USER,ADMIN
+
+spring.cloud.gateway.routes[3].id=plan-service-mobile-update
+spring.cloud.gateway.routes[3].uri=lb://PLAN-SERVICE
+spring.cloud.gateway.routes[3].predicates[0]=Path=/plan/mobile/update
+spring.cloud.gateway.routes[3].metadata.roles=ADMIN
+
+spring.cloud.gateway.routes[4].id=plan-service-mobile-delete
+spring.cloud.gateway.routes[4].uri=lb://PLAN-SERVICE
+spring.cloud.gateway.routes[4].predicates[0]=Path=/plan/mobile/delete/**
+spring.cloud.gateway.routes[4].metadata.roles=ADMIN
+
+# PLAN-SERVICE - TV Plans
+spring.cloud.gateway.routes[5].id=plan-service-tv-get-all
+spring.cloud.gateway.routes[5].uri=lb://PLAN-SERVICE
+spring.cloud.gateway.routes[5].predicates[0]=Path=/plan/tv/get/all
+spring.cloud.gateway.routes[5].metadata.roles=USER,ADMIN
+
+spring.cloud.gateway.routes[6].id=plan-service-tv-update
+spring.cloud.gateway.routes[6].uri=lb://PLAN-SERVICE
+spring.cloud.gateway.routes[6].predicates[0]=Path=/plan/tv/update
+spring.cloud.gateway.routes[6].metadata.roles=ADMIN
+
+spring.cloud.gateway.routes[7].id=plan-service-tv-delete
+spring.cloud.gateway.routes[7].uri=lb://PLAN-SERVICE
+spring.cloud.gateway.routes[7].predicates[0]=Path=/plan/tv/delete/**
+spring.cloud.gateway.routes[7].metadata.roles=ADMIN
+
+# PLAN-SERVICE - Wifi Plans
+spring.cloud.gateway.routes[8].id=plan-service-wifi-get-all
+spring.cloud.gateway.routes[8].uri=lb://PLAN-SERVICE
+spring.cloud.gateway.routes[8].predicates[0]=Path=/plan/wifi/get/all
+spring.cloud.gateway.routes[8].metadata.roles=USER,ADMIN
+
+spring.cloud.gateway.routes[9].id=plan-service-wifi-update
+spring.cloud.gateway.routes[9].uri=lb://PLAN-SERVICE
+spring.cloud.gateway.routes[9].predicates[0]=Path=/plan/wifi/update
+spring.cloud.gateway.routes[9].metadata.roles=ADMIN
+
+spring.cloud.gateway.routes[10].id=plan-service-wifi-delete
+spring.cloud.gateway.routes[10].uri=lb://PLAN-SERVICE
+spring.cloud.gateway.routes[10].predicates[0]=Path=/plan/wifi/delete/**
+spring.cloud.gateway.routes[10].metadata.roles=ADMIN
+
+
+# CALCULATION-SERVICE
+spring.cloud.gateway.routes[11].id=calculation-service-user-proxy
+spring.cloud.gateway.routes[11].uri=lb://CALCULATION-SERVICE
+spring.cloud.gateway.routes[11].predicates[0]=Path=/calculate/proxy/amount
+spring.cloud.gateway.routes[11].metadata.roles=USER
+
+# BILLING-SERVICE
+spring.cloud.gateway.routes[12].id=billing-service-user-transfer
+spring.cloud.gateway.routes[12].uri=lb://BILLING-SERVICE
+spring.cloud.gateway.routes[12].predicates[0]=Path=/account/transfer
+spring.cloud.gateway.routes[12].metadata.roles=USER
+
+# AUTHENTICATION-SERVICE
+spring.cloud.gateway.routes[13].id=authentication-service-register
+spring.cloud.gateway.routes[13].uri=lb://AUTHENTICATION-SERVICE
+spring.cloud.gateway.routes[13].predicates[0]=Path=/auth/register
+spring.cloud.gateway.routes[13].metadata.roles=USER
+
+spring.cloud.gateway.routes[14].id=authentication-service-login
+spring.cloud.gateway.routes[14].uri=lb://AUTHENTICATION-SERVICE
+spring.cloud.gateway.routes[14].predicates[0]=Path=/auth/login
+spring.cloud.gateway.routes[14].metadata.roles=USER,ADMIN
+
+spring.cloud.gateway.routes[15].id=authentication-service-login
+spring.cloud.gateway.routes[15].uri=lb://AUTHENTICATION-SERVICE
+spring.cloud.gateway.routes[15].predicates[0]=Path=/auth/find/**
+spring.cloud.gateway.routes[15].metadata.roles=USER,ADMIN

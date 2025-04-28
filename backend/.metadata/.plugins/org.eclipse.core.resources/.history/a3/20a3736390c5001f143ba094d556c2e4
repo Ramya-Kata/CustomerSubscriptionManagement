@@ -1,0 +1,92 @@
+package com.indus.training.microservice;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
+import com.indus.training.microservice.entity.MobilePlan;
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+class MobileServiceIntegrationTest {
+
+	@Autowired
+	private TestRestTemplate restTemplate;
+
+	private MobilePlan validPlan;
+	private MobilePlan invalidPlan;
+
+	@BeforeEach
+	void setUp() {
+		validPlan = new MobilePlan();
+		validPlan.setPlanName("Basic Plan");
+		validPlan.setDataLimit("5GB");
+		validPlan.setCallMinutes(100);
+		validPlan.setTextLimit(50);
+		validPlan.setMonthlyCost(10.0);
+		validPlan.setDiscount(5.0);
+
+		invalidPlan = new MobilePlan();
+		invalidPlan.setPlanName(null); // Invalid due to null name
+	}
+
+	@Test
+	void testAddOrUpdateMobilePlan_ValidPlan() {
+		ResponseEntity<MobilePlan> response = restTemplate.postForEntity("/plan/mobile/update", validPlan,
+				MobilePlan.class);
+
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+		assertNotNull(response.getBody());
+		assertEquals("Basic Plan", response.getBody().getPlanName());
+	}
+
+	@Test
+	void testAddOrUpdateMobilePlan_InvalidPlan() {
+		ResponseEntity<String> response = restTemplate.postForEntity("/plan/mobile/update", invalidPlan, String.class);
+
+		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+		assertTrue(response.getBody().contains("Mobile plan cannot be null"));
+	}
+
+	@Test
+	void testGetAllMobilePlans() {
+		// Add two plans
+		restTemplate.postForEntity("/plan/mobile/update", validPlan, MobilePlan.class);
+
+		MobilePlan secondPlan = new MobilePlan();
+		secondPlan.setPlanName("Second Plan");
+		secondPlan.setDataLimit("10GB");
+		secondPlan.setCallMinutes(200);
+		secondPlan.setTextLimit(100);
+		secondPlan.setMonthlyCost(20.0);
+		secondPlan.setDiscount(10.0);
+		restTemplate.postForEntity("/plan/mobile/update", secondPlan, MobilePlan.class);
+
+		// Fetch all plans
+		ResponseEntity<MobilePlan[]> response = restTemplate
+				.getForEntity("/plan/mobile/get/all?pageNumber=0&pageSize=10", MobilePlan[].class);
+
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+		assertNotNull(response.getBody());
+		assertEquals(2, response.getBody().length);
+	}
+
+	@Test
+	void testDeleteMobilePlan() {
+		// Add a plan
+		MobilePlan savedPlan = restTemplate.postForEntity("/plan/mobile/update", validPlan, MobilePlan.class).getBody();
+
+		// Delete the plan
+		restTemplate.delete("/plan/mobile/delete/" + savedPlan.getmobileId());
+
+		// Verify deletion
+		ResponseEntity<MobilePlan[]> response = restTemplate
+				.getForEntity("/plan/mobile/get/all?pageNumber=0&pageSize=10", MobilePlan[].class);
+		assertEquals(0, response.getBody().length);
+	}
+}

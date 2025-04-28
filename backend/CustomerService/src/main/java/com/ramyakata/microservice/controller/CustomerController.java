@@ -1,0 +1,69 @@
+package com.ramyakata.microservice.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.ramyakata.microservice.dao.ProfileService;
+import com.ramyakata.microservice.dto.ProfileDTO;
+import com.ramyakata.microservice.entity.Customer;
+import com.ramyakata.microservice.exception.CustomerException;
+
+/**
+ * Description: REST Controller for managing customer profiles. Provides
+ * endpoints to create, update, retrieve, and delete customer profiles.
+ */
+
+@RestController
+@RequestMapping("/customer/profile")
+public class CustomerController {
+
+	@Autowired
+	private ProfileService profileServiceObj;
+
+	/**
+	 * Description: Adds or updates a customer profile.
+	 *
+	 * @param gmail   The email of the customer to update or create a profile for.
+	 * @param profile The customer profile details, including customer and address.
+	 * @return The updated or newly created customer profile.
+	 */
+	@PostMapping("/update/{gmail}")
+	public ResponseEntity<Customer> addProfile(@PathVariable String gmail, @RequestBody ProfileDTO profile)
+			throws CustomerException {
+		Customer updatedCustomer = profileServiceObj.saveOrUpdateProfile(gmail, profile.getCustomer(),
+				profile.getAddress());
+		return ResponseEntity.ok(updatedCustomer);
+	}
+
+	/**
+	 * Description: Retrieves a customer profile by email.
+	 *
+	 * @param gmail The email of the customer whose profile needs to be retrieved.
+	 * @return The customer profile corresponding to the given email.
+	 */
+	@GetMapping("/find/{gmail}")
+	public ResponseEntity<Customer> getProfile(@PathVariable String gmail) throws CustomerException {
+		Customer customer = profileServiceObj.findProfile(gmail);
+		return ResponseEntity.ok(customer);
+	}
+
+	/**
+	 * Description: Deletes a customer profile by email.
+	 *
+	 * @param gmail The email of the customer whose profile needs to be deleted.
+	 * @return A boolean indicating whether the profile was successfully deleted.
+	 * @throws CustomerException
+	 */
+	@DeleteMapping("/delete/{gmail}")
+	public ResponseEntity<Boolean> removeProfile(@PathVariable String gmail) throws CustomerException {
+		boolean isDeleted = profileServiceObj.deleteProfile(gmail);
+		return ResponseEntity.ok(isDeleted);
+	}
+}

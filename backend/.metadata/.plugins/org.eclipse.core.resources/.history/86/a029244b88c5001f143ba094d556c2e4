@@ -1,0 +1,16 @@
+package com.indus.training.microservice.dao;
+
+import org.springframework.data.domain.Page;
+
+import com.indus.training.microservice.entity.TvPlan;
+import com.indus.training.microservice.exception.SubscriptionException;
+
+public interface TvService {
+
+	public TvPlan addOrUpdateTvPlan(TvPlan plan) throws SubscriptionException;
+
+	public Boolean deleteTvPlan(Long id) throws SubscriptionException;
+
+	public Page<TvPlan> getAllPlans(int pageNumber, int pageSize, String sortBy, String direction)
+			throws SubscriptionException;
+}

@@ -1,0 +1,44 @@
+package com.indus.training.microservice.impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Service;
+
+import com.indus.training.microservice.dao.TvService;
+import com.indus.training.microservice.entity.TvPlan;
+import com.indus.training.microservice.exception.SubscriptionException;
+import com.indus.training.microservice.repo.TvPlanRepo;
+
+@Service
+public class TvDao implements TvService {
+
+	@Autowired
+	private TvPlanRepo tvRepo;
+
+	@Override
+	@CacheEvict(value = "tvPlans", allEntries = true)
+	public TvPlan addOrUpdateTvPlan(TvPlan plan) throws SubscriptionException {
+
+		return null;
+	}
+
+	@Override
+	@CacheEvict(value = "tvPlans", allEntries = true)
+	public Boolean deleteTvPlan(Long id) throws SubscriptionException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	@Cacheable(value = "mobilePlans")
+	public Page<TvPlan> getAllPlans(int pageNumber, int pageSize, String sortBy, String direction)
+			throws SubscriptionException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

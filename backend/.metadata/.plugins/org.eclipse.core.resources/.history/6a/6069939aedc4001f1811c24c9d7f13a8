@@ -1,0 +1,40 @@
+package com.indus.training.microservice.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.indus.training.microservice.dao.ProfileService;
+import com.indus.training.microservice.dto.ProfileDTO;
+import com.indus.training.microservice.entity.Customer;
+import com.indus.training.microservice.exception.CustomerException;
+
+@RestController
+@RequestMapping("/customer/profile")
+public class CustomerController {
+
+	@Autowired
+	private ProfileService profileServiceObj;
+
+	@PostMapping("/update/{gmail}")
+	public Customer addProfile(@PathVariable String gmail, @RequestBody ProfileDTO profile) throws CustomerException {
+		return profileServiceObj.saveOrUpdateProfile(gmail, profile.getCustomer(), profile.getAddress());
+	}
+
+	@GetMapping("/find/{gmail}")
+	public Customer getProfile(@PathVariable String gmail) throws CustomerException {
+		return profileServiceObj.findProfile(gmail);
+
+	}
+	
+	@DeleteMapping("/delete/{gmail}")
+	public Boolean removeProfile(@PathVariable String gmail)throws CustomerException{
+		return profileServiceObj.deleteProfile(gmail);
+		
+	}
+}

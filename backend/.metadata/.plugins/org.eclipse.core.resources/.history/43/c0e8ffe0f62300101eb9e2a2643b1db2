@@ -1,0 +1,24 @@
+package com.indus.training.microservice.svc;
+
+import com.ramyakata.microservice.domain.CalculationInput;
+import com.ramyakata.microservice.domain.CalculationOutput;
+import com.ramyakata.microservice.exception.CalculationException;
+
+/**
+ * Description: Functional interface for performing payment calculations.
+ */
+@FunctionalInterface
+public interface ICalculation {
+
+	 /**
+     *Description: Calculates the total payment amount based on the input request.
+     *
+     * @param request the calculation request containing base amount, number of months, and discount percentage
+     * @return the calculation response containing the total amount after discounts
+	 * @throws CalculationException: Thrown when the input is invalid or the number of months 
+     *                                is not recognized.
+	 */
+	 public CalculationOutput calculate(CalculationInput calInObj) throws CalculationException;
+	 
+	
+}

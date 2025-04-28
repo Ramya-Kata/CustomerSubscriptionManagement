@@ -1,0 +1,6 @@
+package com.ramya.kata.microservice.entity;
+
+public enum Status {
+
+	active, inactive, locked
+}

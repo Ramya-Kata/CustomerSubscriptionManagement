@@ -1,0 +1,16 @@
+package com.indus.training.microservice.dao;
+
+import java.util.List;
+
+import com.indus.training.microservice.entity.WifiPlan;
+import com.indus.training.microservice.exception.SubscriptionException;
+
+public interface WifiService {
+
+	public WifiPlan addOrUpdateWifiPlan(WifiPlan plan) throws SubscriptionException;
+
+	public Boolean deleteWifiPlan(Long id) throws SubscriptionException;
+
+	public List<WifiPlan> getAllPlans() throws SubscriptionException;
+	
+}

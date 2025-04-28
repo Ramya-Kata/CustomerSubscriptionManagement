@@ -1,0 +1,10 @@
+1734390107776	Rename type 'AmountInput'
+1734390127888	Rename type 'AmountOutput'
+1734390712259	Rename type 'IPay'
+1734390894298	Rename type 'PayException'
+1734391232530	Rename type 'CalculationRequest'
+1734391247328	Rename type 'CalculationResponse'
+1734394117457	Rename package 'com.indus.training.microservice'
+1734395328799	Rename package 'com.indus.training.microservice.service'
+1734470780155	Delete element
+1734677359309	Delete element

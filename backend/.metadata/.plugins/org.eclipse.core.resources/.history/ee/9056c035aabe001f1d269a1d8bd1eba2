@@ -1,0 +1,5 @@
+package com.indus.training.microservice.repo;
+
+public interface WifiPlanRepo {
+
+}

@@ -1,0 +1,13 @@
+package com.ramyakata.microservice.repo;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.ramyakata.microservice.entity.MobilePlan;
+
+/**
+ * Description: Repository interface for managing MobilePlan entities. Provides
+ * CRUD operations and query capabilities for the MobilePlan table.
+ */
+public interface MobilePlanRepo extends JpaRepository<MobilePlan, Long> {
+
+}

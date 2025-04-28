@@ -1,0 +1,418 @@
+/* Admin Header */
+.admin-header {
+  display: flex;
+  align-items: center; /* Ensures vertical alignment of all children */
+  justify-content: space-between; /* Pushes nav to the left and dropdown to the right */
+  background: linear-gradient(180deg, #4b007d, #6e528b); /* Gradient with rich purples */
+  padding: 10px 20px;
+  color: #fdfcfd; /* Matches the footer text color */
+  border-radius: 8px;
+  position: relative; /* Ensures absolute positioning for title */
+  height: 60px; /* Consistent header height */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+/* Navigation Menu */
+.nav-menu {
+  display: flex;
+  gap: 10px;
+}
+
+.nav-menu button {
+  background-color: white;
+  color: #4b007d; /* Matches one of the gradient colors */
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.nav-menu button.active {
+  background-color: #6e528b; /* A shade from the gradient */
+  color: white;
+}
+
+.nav-menu button:hover {
+  background-color: #4b007d; /* Darker hover effect */
+  color: #fdfcfd;
+}
+
+/* Plan Selector Dropdown */
+.plan-selector {
+  padding: 8px 12px;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: white;
+  color: #4b007d;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.plan-selector:hover {
+  background-color: #6e528b;
+  color: #fdfcfd;
+}
+
+/* Centered Title */
+.dashboard-title {
+  position: absolute; /* Ensures it stays in the middle */
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%); /* Centers it both horizontally and vertically */
+  font-size: 22px; /* Slightly larger font size */
+  font-weight: bold;
+  margin: 0;
+  color: #fdfcfd; /* Matches footer text */
+}
+
+/* Services Tab Container */
+.services-container {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 60px); /* Subtract header height */
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Table Styling */
+.services-table {
+  flex-grow: 1; /* Ensures the table grows to fill available space */
+  margin-top: 20px;
+}
+
+.services-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.services-table th,
+.services-table td {
+  padding: 10px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+.services-table thead {
+  background-color: #4b007d;
+  color: white;
+}
+
+.services-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.services-table tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* Pagination Controls */
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  gap: 8px;
+}
+
+.pagination button {
+  width: 20px;
+  height: 20px;
+  border: none;
+  border-radius: 50%;
+  background-color: #4b007d;
+  color: white;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.pagination button:disabled {
+  background-color: #ccc;
+}
+
+.pagination button.active {
+  background-color: #6e528b;
+}
+
+.pagination button:hover:not(:disabled) {
+  background-color: #6e528b;
+}
+
+/* Update Plan Section */
+.update-plan-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  margin: 0 auto;
+  max-width: 600px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  min-height: calc(100vh - 100px); /* Leaves space for header and footer */
+  box-sizing: border-box;
+}
+
+.update-plan-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #4b007d;
+  margin-bottom: 20px;
+}
+
+.update-plan-form {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.update-plan-form label {
+  font-size: 14px;
+  color: #4b007d;
+  font-weight: bold;
+  width: 100%; /* Each label spans full width */
+}
+
+.update-plan-form input {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  width: calc(50% - 20px); /* Two columns layout */
+}
+
+.update-plan-form input:focus {
+  outline: none;
+  border-color: #4b007d;
+  box-shadow: 0 0 5px rgba(75, 0, 125, 0.5);
+}
+
+.save-button {
+  width: 80px;
+  padding: 8px;
+  font-size: 14px;
+  font-weight: bold;
+  color: white;
+  background-color: #4b007d;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  align-self: flex-end;
+}
+
+.save-button:hover {
+  background-color: #6e528b;
+}
+
+/* Footer Placement */
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+footer {
+  margin-top: auto;
+  background: linear-gradient(-180deg, #6e528ba8, #2c0245);
+  color: #fdfcfd;
+  padding: 2px 0;
+  text-align: center;
+  font-family: 'Poppins', sans-serif;
+  box-shadow: 0 -4px 6px rgba(223, 157, 232, 0.886);
+}
+
+/* Delete Plan Container */
+.delete-plan-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  margin: 0 auto;
+  max-width: 600px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  min-height: calc(100vh - 100px); /* Leaves space for header and footer */
+  box-sizing: border-box;
+}
+
+/* Title */
+.delete-plan-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #4b007d;
+  margin-bottom: 20px;
+}
+
+/* Delete Form */
+.delete-plan-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.delete-plan-input {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  width: 100%;
+}
+
+.delete-plan-input:focus {
+  outline: none;
+  border-color: #4b007d;
+  box-shadow: 0 0 5px rgba(75, 0, 125, 0.5);
+}
+
+/* Delete Icon Button */
+.delete-icon-button {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #4b007d;
+  color: white;
+  font-size: 20px; /* Icon size */
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  align-self: flex-end;
+}
+
+.delete-icon-button:hover {
+  background-color: #4b007d;
+}
+
+.delete-icon-button:disabled {
+  background-color: #ddd;
+  cursor: not-allowed;
+}
+
+/* Footer Placement */
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+footer {
+  margin-top: auto;
+  background: linear-gradient(-180deg, #6e528ba8, #2c0245);
+  color: #fdfcfd;
+  padding: 2px 0;
+  text-align: center;
+  font-family: 'Poppins', sans-serif;
+  box-shadow: 0 -4px 6px rgba(223, 157, 232, 0.886);
+}
+
+
+
+/* User Details Container */
+.user-details-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: calc(100vh - 100px); /* Leave space for the header and footer */
+  padding: 20px;
+  background-color: #f9f9f9;
+}
+
+/* Title */
+.user-details-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #4b007d;
+  margin-bottom: 20px;
+}
+
+/* Form */
+.user-details-form {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.email-input {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.email-input:focus {
+  outline: none;
+  border-color: #4b007d;
+  box-shadow: 0 0 5px rgba(75, 0, 125, 0.5);
+}
+
+.fetch-button {
+  width: 100px;
+  padding: 8px;
+  font-size: 14px;
+  font-weight: bold;
+  color: white;
+  background-color: #4b007d;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.fetch-button:hover {
+  background-color: #6e528b;
+}
+
+/* Error Message */
+.error-message {
+  color: red;
+  font-weight: bold;
+  margin-top: 15px;
+}
+
+/* User Information */
+.user-details-info {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 600px;
+}
+
+.user-details-info h3, h4 {
+  color: #4b007d;
+}
+
+.user-details-info p {
+  font-size: 14px;
+  color: #333;
+  margin: 5px 0;
+}
+
+/* Footer Placement */
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+footer {
+  margin-top: auto;
+}

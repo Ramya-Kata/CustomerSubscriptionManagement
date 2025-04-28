@@ -1,0 +1,90 @@
+package com.indus.training.microservice.impl;
+
+import org.springframework.stereotype.Service;
+
+import com.indus.training.microservice.domain.CalculationInput;
+import com.indus.training.microservice.domain.CalculationOutput;
+import com.indus.training.microservice.exception.CalculationException;
+import com.indus.training.microservice.svc.ICalculation;
+import com.indus.training.microservice.svc.ITaxCalculation;
+
+/**
+ * Description: Implementation of the ICalculation interface that calculates the
+ * payment based on the input amount, discount percentage, and number of months.
+ * 
+ */
+@Service
+public class Calculation implements ICalculation {
+
+	/**
+	 * Description: Calculates the total payment amount based on the input request.
+	 *
+	 * @param request the calculation request containing base amount, number of
+	 *                months, and discount percentage
+	 * @return the calculation response containing the total amount after discounts
+	 * @throws CalculationException: Thrown when the input is invalid or the number
+	 *                               of months is not recognized.
+	 */
+	@Override
+	public CalculationOutput calculate(CalculationInput calInObj) throws CalculationException {
+
+		if (calInObj == null) {
+			throw new CalculationException("Input object cannot be null");
+		}
+
+		CalculationOutput amount = null;
+		{
+			amount = new CalculationOutput();
+
+			double num = calInObj.getBaseAmount();
+			double dis = calInObj.getDiscountPercentage();
+			String mon = calInObj.getNumberOfMonths();
+
+			double discountAmount = (num * dis) / 100;
+
+			double finalAmount = num - discountAmount;
+
+			switch (mon.toLowerCase()) {
+			case "monthly":
+				finalAmount = finalAmount * 1;
+				break;
+			case "quarterly":
+				finalAmount = finalAmount * 3;
+				break;
+			case "semi-annually":
+				finalAmount = finalAmount * 6;
+				break;
+			case "annually":
+				finalAmount = finalAmount * 12;
+				break;
+			default:
+				throw new CalculationException("Invalid number of months value: " + mon); // Exception for invalid input
+			}
+
+			ITaxCalculation taxAmount = (amountToTax) -> {
+				double taxRate = 5.0;
+
+				if (amountToTax > 500 && amountToTax <= 1000) {
+					taxRate += 2.0;
+				} else if (amountToTax > 1000 && amountToTax <= 5000) {
+					taxRate += 4.0;
+				} else if (amountToTax > 5000) {
+					taxRate += 6.0;
+				}
+
+				return taxRate;
+			};
+
+			double taxToPay = (finalAmount * taxAmount.calculateTax(finalAmount)) / 100;
+
+			amount.setBaseAmount(num);
+			amount.setDiscountPercentage(dis);
+			amount.setNumberOfMonths(mon);
+			amount.setTax(taxAmount.calculateTax(finalAmount));
+
+			amount.setTotalAmount(finalAmount + taxToPay);
+		}
+		return amount;
+	}
+
+}

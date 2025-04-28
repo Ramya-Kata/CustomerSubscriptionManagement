@@ -1,0 +1,22 @@
+package com.indus.training.microservice.dao;
+
+import java.util.List;
+
+import org.springframework.data.domain.Page;
+
+import com.indus.training.microservice.entity.MobilePlan;
+import com.indus.training.microservice.exception.SubscriptionException;
+
+public interface MobileService {
+
+	// Employee Responsibility: Add a new mobile plan
+	public MobilePlan addOrUpdateMobilePlan(MobilePlan plan) throws SubscriptionException;
+
+	// Employee Responsibility: Delete a mobile plan by ID
+	public Boolean deleteMobilePlan(Long id) throws SubscriptionException;
+
+	// Customer & Employee Responsibility: View all available plans
+	public Page<MobilePlan> getAllPlans(int pageNumber, int pageSize, String sortBy, String direction)
+			throws SubscriptionException;
+
+}

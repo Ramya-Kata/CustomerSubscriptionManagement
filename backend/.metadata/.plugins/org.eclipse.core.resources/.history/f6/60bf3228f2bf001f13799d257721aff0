@@ -1,0 +1,42 @@
+package com.indus.training.microservice.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.indus.training.microservice.dao.TvService;
+import com.indus.training.microservice.entity.TvPlan;
+import com.indus.training.microservice.exception.SubscriptionException;
+
+@RestController
+@RequestMapping("/plan/tv")
+public class TvController {
+
+	@Autowired
+	private TvService tvService;
+
+	@PostMapping("/update")
+	public TvPlan addOrUpdateMobilePlan(@RequestBody TvPlan plan) throws SubscriptionException {
+		return tvService.addOrUpdateTvPlan(plan);
+	}
+
+	@DeleteMapping("/delete/{id}")
+	public Boolean deleteMobilePlan(@PathVariable Long id) throws SubscriptionException {
+		return tvService.deleteTvPlan(id);
+	}
+
+	@GetMapping("/get/all")
+	public Page<TvPlan> getAllMobilePlans(@RequestParam(defaultValue = "0") int pageNumber,
+			@RequestParam(defaultValue = "10") int pageSize, @RequestParam(defaultValue = "mobileId") String sortBy,
+			@RequestParam(defaultValue = "ASC") String direction) throws SubscriptionException {
+
+		return tvService.getAllPlans(pageNumber, pageSize, sortBy, direction);
+	}
+}

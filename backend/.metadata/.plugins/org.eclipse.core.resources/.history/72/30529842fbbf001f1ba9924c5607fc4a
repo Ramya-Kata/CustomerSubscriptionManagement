@@ -1,0 +1,5 @@
+package com.indus.training.microservice.exception;
+
+public class GlobalException {
+
+}

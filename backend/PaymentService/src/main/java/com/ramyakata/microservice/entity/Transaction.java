@@ -1,0 +1,217 @@
+package com.ramyakata.microservice.entity;
+
+import java.util.Date;
+import java.util.Objects;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+//import jakarta.persistence.PrePersist;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+
+/**
+ * Description: Entity class representing a transaction in the system. The class
+ * is mapped to the "transactions" table in the database. This entity contains
+ * information about a transaction, including:
+ * <ul>
+ * <li>Transaction ID</li>
+ * <li>Transaction Type (CREDIT, DEBIT, etc.)</li>
+ * <li>Transaction Amount</li>
+ * <li>Transaction Date</li>
+ * <li>Transaction Description</li>
+ * <li>Associated Bank Account</li>
+ * </ul>
+ */
+
+@Entity
+@Table(name = "transactions")
+public class Transaction {
+
+	/**
+	 * Description: Unique identifier for each transaction. This field is
+	 * automatically generated using the transaction sequence.
+	 */
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "transaction_sequence")
+	@SequenceGenerator(name = "transaction_sequence", sequenceName = "transaction_id_seq", initialValue = 1000000, allocationSize = 1)
+	@Column(name = "transaction_id")
+	private Long transId;
+
+	/**
+	 * Description: Type of the transaction (e.g., CREDIT, DEBIT). This field is
+	 * stored as an enum value in the database.
+	 */
+	@Column(name = "transaction_type")
+	@Enumerated(EnumType.STRING)
+	private TransactionType transType;
+
+	/**
+	 * Description: The amount involved in the transaction.
+	 */
+
+	@Column(name = "amount")
+	private Double amount;
+
+	/**
+	 * Description: The date when the transaction occurred.
+	 */
+
+	@Column(name = "transaction_date")
+	private Date transDate;
+
+	/**
+	 * Description: A description or note about the transaction.
+	 */
+
+	@Column(name = "description")
+	private String description;
+
+	/**
+	 * Description: The associated bank account for the transaction. A Many-to-One
+	 * relationship is established with the Account entity.
+	 */
+
+	@ManyToOne
+	@JoinColumn(name = "account_id", referencedColumnName = "account_id")
+	private Account account;
+
+	/**
+	 * Description: Retrieves the associated account for the transaction.
+	 * 
+	 * @return The associated Account object.
+	 */
+	public Account getAccount() {
+		return account;
+	}
+
+	/**
+	 * Description: Sets the associated account for the transaction.
+	 * 
+	 * @param account The Account to be associated with the transaction.
+	 */
+	public void setAccount(Account account) {
+		this.account = account;
+	}
+
+	/**
+	 * Description: Retrieves the transaction ID.
+	 * 
+	 * @return The transaction ID.
+	 */
+	public Long getTransId() {
+		return transId;
+	}
+
+	/**
+	 * Description: Automatically sets the transaction ID before persisting the
+	 * entity. If the transaction ID is not provided, it is generated in the format
+	 * "TRNSNxxxxxxx".
+	 */
+
+	public void setTransId(Long transId) {
+		this.transId = transId;
+	}
+
+	/**
+	 * Description: Retrieves the transaction type.
+	 * 
+	 * @return The type of the transaction.
+	 */
+	public TransactionType getTransType() {
+		return transType;
+	}
+
+	/**
+	 * Description: Sets the transaction type.
+	 * 
+	 * @param transType The type of the transaction (e.g., CREDIT, DEBIT).
+	 */
+	public void setTransType(TransactionType transType) {
+		this.transType = transType;
+	}
+
+	/**
+	 * Description: Retrieves the transaction amount.
+	 * 
+	 * @return The amount involved in the transaction.
+	 */
+	public Double getAmount() {
+		return amount;
+	}
+
+	/**
+	 * Description: Sets the transaction amount.
+	 * 
+	 * @param amount The amount involved in the transaction.
+	 */
+	public void setAmount(Double amount) {
+		this.amount = amount;
+	}
+
+	/**
+	 * Description: Retrieves the transaction date.
+	 * 
+	 * @return The date when the transaction occurred.
+	 */
+	public Date getTransDate() {
+		return transDate;
+	}
+
+	/**
+	 * Description: Sets the transaction date.
+	 * 
+	 * @param transDate The date when the transaction occurred.
+	 */
+	public void setTransDate(Date transDate) {
+		this.transDate = transDate;
+	}
+
+	/**
+	 * Description: Retrieves the description of the transaction.
+	 * 
+	 * @return The description or note about the transaction.
+	 */
+	public String getDescription() {
+		return description;
+	}
+
+	/**
+	 * Description: Sets the description of the transaction.
+	 * 
+	 * @param description The description or note about the transaction.
+	 */
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	@Override
+	public String toString() {
+		return "Transaction [transId=" + transId + ", transType=" + transType + ", amount=" + amount + ", transDate="
+				+ transDate + ", Description=" + description + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(transId);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Transaction other = (Transaction) obj;
+		return Objects.equals(transId, other.transId);
+	}
+
+}

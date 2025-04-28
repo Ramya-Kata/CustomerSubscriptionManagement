@@ -1,0 +1,46 @@
+.not-found {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: linear-gradient(135deg, #79694b, #2e1c2f);
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+}
+
+.image {
+    max-width: 400px;
+    width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+.title{
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: #000000;
+    margin-bottom: 10px;
+}
+
+.text {
+    font-size: 1rem;
+    color: #16031f;
+    margin-bottom: 30px;
+}
+
+.back-link {
+    display: inline-block;
+    text-decoration: none;
+    padding: 12px 24px;
+    background-color: #5f0676;
+    color: #fff;
+    font-weight: 500;
+    border-radius: 25px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.back-link:hover {
+    background-color: #391068;
+    transform: scale(1.05);
+}

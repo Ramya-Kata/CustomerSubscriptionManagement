@@ -1,0 +1,15 @@
+package com.indus.training.microservice.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.indus.training.microservice.dao.TvService;
+
+@RestController
+@RequestMapping("/plan/tv")
+public class TvController {
+
+	@Autowired
+	private TvService tvService;
+}

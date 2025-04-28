@@ -1,0 +1,9 @@
+spring.application.name=BillingService
+
+spring.datasource.url=jdbc:postgresql://localhost:5432/bank_service
+spring.datasource.username=postgres
+spring.datasource.password=Taehyung@3031
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+
+server.port=8084

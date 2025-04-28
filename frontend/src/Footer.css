@@ -1,0 +1,33 @@
+.footer {
+    background: linear-gradient(-180deg, #6e528ba8, #2c0245);
+    color: #fdfcfd;
+    padding: 2px 0;
+    text-align: center;
+    font-family: 'Poppins', sans-serif;
+    box-shadow: 0 -4px 6px rgba(223, 157, 232, 0.886);
+    margin-top: auto; /* Ensures the footer stays at the bottom of the page */
+}
+
+.footer-nav {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 10px;
+}
+
+.footer-link {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.footer-link:hover {
+    color: #ff69b4; /* Bright pink hover effect */
+    transform: scale(1.1);
+}
+
+.footer-text {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}

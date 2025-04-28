@@ -1,0 +1,68 @@
+package com.indus.training.microservice.impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+
+import com.indus.training.microservice.dao.WifiService;
+import com.indus.training.microservice.entity.WifiPlan;
+import com.indus.training.microservice.exception.SubscriptionException;
+import com.indus.training.microservice.repo.WifiPlanRepo;
+
+@Service
+public class WifiDao implements WifiService {
+
+	@Autowired
+	private WifiPlanRepo wifiRepo;
+
+	@Override
+	@CacheEvict(value = "wifiPlans", allEntries = true)
+	public WifiPlan addOrUpdateWifiPlan(WifiPlan plan) throws SubscriptionException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	@CacheEvict(value = "wifiPlans", allEntries = true)
+	public Boolean deleteWifiPlan(Long id) throws SubscriptionException {
+		try {
+			if (id == null) {
+				throw new SubscriptionException("Mobile plan ID cannot be null");
+			}
+			if (!wifiRepo.existsById(id)) {
+				throw new SubscriptionException("Mobile plan with ID " + id + " not found");
+			}
+			wifiRepo.deleteById(id);
+			return true;
+		} catch (Exception ex) {
+			throw new SubscriptionException("An error occurred while deleting the plan: " + ex.getMessage());
+		}
+	}
+
+	@Override
+	@Cacheable(value = "wifiPlans")
+	public Page<WifiPlan> getAllPlans(int pageNumber, int pageSize, String sortBy, String direction)
+			throws SubscriptionException {
+		try {
+
+			Sort sort = Sort.by(Sort.Order.by(sortBy));
+			if ("desc".equalsIgnoreCase(direction)) {
+				sort = Sort.by(Sort.Order.desc(sortBy));
+			}
+
+			Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
+
+			return wifiRepo.findAll(pageable);
+		} catch (Exception ex) {
+			throw new SubscriptionException("An error occurred while retrieving the plans: " + ex.getMessage());
+		}
+	}
+
+}

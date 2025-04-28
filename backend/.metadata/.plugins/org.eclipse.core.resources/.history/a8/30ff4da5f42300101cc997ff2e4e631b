@@ -1,0 +1,14 @@
+package com.ramya.kata.microservice.dao;
+
+import com.indus.training.microservice.dto.UserDto;
+import com.indus.training.microservice.entity.Users;
+import com.indus.training.microservice.exception.AuthException;
+
+public interface AuthService {
+
+	public Boolean insert(Users user) throws AuthException;
+
+	String verify(Users user) throws AuthException;
+
+	public UserDto getByUserName(String username) throws AuthException;
+}

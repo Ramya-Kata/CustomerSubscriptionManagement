@@ -1,0 +1,9 @@
+package com.indus.training.microservice.repo;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.indus.training.microservice.entity.MobilePlan;
+
+public interface MobilePlanRepo extends JpaRepository<MobilePlan, Long> {
+
+}

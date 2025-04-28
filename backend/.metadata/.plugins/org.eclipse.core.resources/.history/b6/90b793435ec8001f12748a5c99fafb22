@@ -1,0 +1,96 @@
+package com.indus.training.microservice.impl;
+
+import org.springframework.stereotype.Service;
+
+import com.indus.training.microservice.domain.CalculationInput;
+import com.indus.training.microservice.domain.CalculationOutput;
+import com.indus.training.microservice.exception.CalculationException;
+import com.indus.training.microservice.svc.ICalculation;
+
+/**
+ * Description: Implementation of the ICalculation interface that calculates the
+ * payment based on the input amount, discount percentage, and number of months.
+ * 
+ */
+@Service
+public class Calculation implements ICalculation {
+
+	/**
+	 * Calculates the total payment based on base amount, discount, and subscription
+	 * duration.
+	 *
+	 * @param calInObj the input containing base amount, discount percentage, and
+	 *                 subscription duration
+	 * @return a CalculationOutput object with the final calculated amount and
+	 *         details
+	 * @throws CalculationException if input validation fails or duration is invalid
+	 */
+	@Override
+	public CalculationOutput calculate(CalculationInput calInObj) throws CalculationException {
+		if (calInObj == null) {
+			throw new CalculationException("Input object cannot be null");
+		}
+
+		
+		validateInput(calInObj);
+
+		double baseAmount = calInObj.getBaseAmount();
+		double discountPercentage = calInObj.getDiscountPercentage();
+		String numberOfMonths = calInObj.getNumberOfMonths();
+
+		double discountAmount = (baseAmount * discountPercentage) / 100;
+		double discountedAmount = baseAmount - discountAmount;
+		double totalAmount = calculateDurationAmount(discountedAmount, numberOfMonths);
+
+		double taxRate = calculateTaxRate(totalAmount);
+		double taxToPay = (totalAmount * taxRate) / 100;
+
+		CalculationOutput output = new CalculationOutput();
+		output.setBaseAmount(baseAmount);
+		output.setDiscountPercentage(discountPercentage);
+		output.setNumberOfMonths(numberOfMonths);
+		output.setTax(taxRate);
+		output.setTotalAmount(totalAmount + taxToPay);
+
+		return output;
+	}
+
+	private void validateInput(CalculationInput input) throws CalculationException {
+		if (input.getBaseAmount() <= 0) {
+			throw new CalculationException("Base amount must be greater than zero.");
+		}
+		if (input.getDiscountPercentage() < 0 || input.getDiscountPercentage() > 100) {
+			throw new CalculationException("Discount percentage must be between 0 and 100.");
+		}
+		if (input.getNumberOfMonths() == null || input.getNumberOfMonths().isEmpty()) {
+			throw new CalculationException("Number of months cannot be null or empty.");
+		}
+	}
+
+	private double calculateDurationAmount(double discountedAmount, String numberOfMonths) throws CalculationException {
+		switch (numberOfMonths.toLowerCase()) {
+		case "monthly":
+			return discountedAmount;
+		case "quarterly":
+			return discountedAmount * 3;
+		case "semi-annually":
+			return discountedAmount * 6;
+		case "annually":
+			return discountedAmount * 12;
+		default:
+			throw new CalculationException("Invalid duration: " + numberOfMonths);
+		}
+	}
+
+	private double calculateTaxRate(double amount) {
+		if (amount <= 500) {
+			return 5.0;
+		} else if (amount <= 1000) {
+			return 7.0;
+		} else if (amount <= 5000) {
+			return 9.0;
+		} else {
+			return 11.0;
+		}
+	}
+}

@@ -1,0 +1,62 @@
+package com.indus.training.microservice.impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
+
+import com.indus.training.microservice.dao.MobileService;
+import com.indus.training.microservice.entity.MobilePlan;
+import com.indus.training.microservice.exception.SubscriptionException;
+import com.indus.training.microservice.repo.MobilePlanRepo;
+
+@Service
+public class MobileDao implements MobileService {
+
+	@Autowired
+	private MobilePlanRepo mobileRepo;
+
+	@Override
+	@CacheEvict(value = "mobilePlans", allEntries = true)
+	public MobilePlan addOrUpdateMobilePlan(MobilePlan plan) throws SubscriptionException {
+
+		try {
+			if (plan == null) {
+				throw new SubscriptionException("Mobile plan cannot be null");
+			}
+			return mobileRepo.save(plan);
+		} catch (IllegalArgumentException ex) {
+			throw new SubscriptionException("Invalid input: " + ex.getMessage());
+		} catch (Exception ex) {
+			throw new SubscriptionException("An unexpected error occurred while saving the plan: " + ex.getMessage());
+		}
+	}
+
+	@Override
+	@CacheEvict(value = "mobilePlans", allEntries = true)
+	public Boolean deleteMobilePlan(Long id) throws SubscriptionException {
+
+		try {
+			if (id == null) {
+				throw new SubscriptionException("Mobile plan ID cannot be null");
+			}
+			if (!mobileRepo.existsById(id)) {
+				throw new SubscriptionException("Mobile plan with ID " + id + " not found");
+			}
+			mobileRepo.deleteById(id); // Delete the plan by ID
+			return true;
+		} catch (Exception ex) {
+			throw new SubscriptionException("An error occurred while deleting the plan: " + ex.getMessage());
+		}
+	}
+
+	@Override
+	@Cacheable(value = "mobilePlans")
+	public List<MobilePlan> getAllPlans() throws SubscriptionException {
+
+		return null;
+	}
+
+}

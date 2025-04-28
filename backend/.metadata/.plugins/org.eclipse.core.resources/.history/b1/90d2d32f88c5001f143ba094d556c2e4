@@ -1,0 +1,13 @@
+package com.indus.training.microservice.exception;
+
+public class SubscriptionException extends Exception {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public SubscriptionException(String msg) {
+		super(msg);
+	}
+}
