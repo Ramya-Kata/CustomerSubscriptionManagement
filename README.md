@@ -31,6 +31,9 @@ This is a full-stack subscription management system designed to handle customer 
 - Spring Cloud
 - Eureka Server
 - API Gateway (Spring Gateway)
+- PostgreSQL
+- MongoDB
+- MySQL
 
 ### Frontend
 - React.js 
