@@ -1,9 +1,9 @@
 
 # 📦 Customer Subscription Management System
 
-💼 Developed by **Ramya Kata** — Full Stack Developer
+💼 Developed by **Ramya Kata** — Software Engineer
 
-This is a full-stack subscription management system designed to handle customer onboarding, plan selection, payment integration, and subscription tracking.
+A full-stack subscription management platform designed to handle customer onboarding, plan selection, secure access, and subscription tracking. The app features **role-based dashboards** for Admin and Customers, with full authentication and microservice-based backend architecture.
 
 ---
 
@@ -12,6 +12,8 @@ This is a full-stack subscription management system designed to handle customer 
 - 🎯 Secure Authentication and Authorization (JWT-based)
 - 👥 Customer Registration and Management
 - 📦 Plan Selection and Subscription Flow
+-  📊 **Admin Dashboard** — accessible only with root credentials
+- 📋 **Customer Dashboard** — users can view, select, and manage subscriptions
 - 💳 Payment Gateway Integration (Dummy Payment Service)
 - 🧠 Microservices Architecture using Spring Boot
 - 🔎 Service Discovery using Eureka
@@ -64,6 +66,15 @@ This is a full-stack subscription management system designed to handle customer 
 - Built with [React.js] 
 - Handles customer registration, plan selection, subscription management
 - Communicates with backend via REST APIs
+
+## 🧑‍💼 Roles & Access Flow
+
+| Role     | Access Method     | Permissions                                                                                       |
+|----------|------------------|----------------------------------------------------------------------------------------------------|
+| **Admin**   | Login only (root credentials hardcoded) | Access to all customer data, plans, payments, and subscriptions          |
+| **Customer** | Register → Login | View plans, subscribe/unsubscribe, view own subscriptions only                                 |
+
+
 
 ## How to Run
 
