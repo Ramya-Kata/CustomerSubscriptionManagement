@@ -105,11 +105,11 @@ A full-stack subscription management platform designed to handle customer onboar
 ### 📝 Register Page
 ![Register](frontend/src/assets/screenshots/register.png)
 
-### 📱 Customer – Plan Selection
-![Plan Selection](frontend/src/assets/screenshots/user-plan-selection.png)
-
 ### 🏠 Customer – Dashboard Overview
 ![User Dashboard](frontend/src/assets/screenshots/user-dashboard.png)
+
+### 📱 Customer – Plan Selection
+![Plan Selection](frontend/src/assets/screenshots/user-plan-selection.png)
 
 ### 👤 Customer – Update Profile
 ![Update Profile](frontend/src/assets/screenshots/profile-update.png)
