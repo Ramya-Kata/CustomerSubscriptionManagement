@@ -94,3 +94,34 @@ A full-stack subscription management platform designed to handle customer onboar
 	```bash
 	   npm install
 	   npm start```
+
+
+
+ ## 📸 Screenshots
+
+### 🔐 Login Page
+![Login](./src/assets/screenshots/login.png)
+
+### 📝 Register Page
+![Register](./src/assets/screenshots/register.png)
+
+### 📱 Customer – Plan Selection
+![Plan Selection](./src/assets/screenshots/user-plan-selection.png)
+
+### 🏠 Customer – Dashboard Overview
+![User Dashboard](./src/assets/screenshots/user-dashboard.png)
+
+### 👤 Customer – Update Profile
+![Update Profile](./src/assets/screenshots/profile-update.png)
+
+### 🧾 Admin – View Mobile Plans
+![Admin Plans](./src/assets/screenshots/admin-view-plans.png)
+
+### 🛠️ Admin – Update Mobile Plan
+![Update Plan](./src/assets/screenshots/admin-update.png)
+
+### ❌ Admin – Delete Mobile Plan
+![Delete Plan](./src/assets/screenshots/admin-delete.png)
+
+### 🔍 Admin – Fetch User Info
+![Fetch User](./src/assets/screenshots/admin-fetch-user.png)
