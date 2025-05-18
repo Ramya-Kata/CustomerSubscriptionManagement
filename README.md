@@ -106,7 +106,7 @@ A full-stack subscription management platform designed to handle customer onboar
 ![Register](frontend/src/assets/screenshots/register.png)
 
 ### 📱 Customer – Plan Selection
-![Plan Selection](./src/assets/screenshots/user-plan-selection.png)
+![Plan Selection](frontend/src/assets/screenshots/user-plan-selection.png)
 
 ### 🏠 Customer – Dashboard Overview
 ![User Dashboard](frontend/src/assets/screenshots/user-dashboard.png)
