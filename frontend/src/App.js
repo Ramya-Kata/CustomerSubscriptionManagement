@@ -1,19 +1,19 @@
-import Login from './Login';
-import Register from './Register';
-import NotFound from './NotFound';
-import './App.css';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import NotFound from './pages/NotFound';
+import './styles/App.css';
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
-import Home from './Home';
-import Profile from './profile';
-import AdminDashBoard from './AdminDashBoard';
-import UserDashBoard from './UserDashBoard';
-import { UserProvider } from './UserContext';
-import UserMobilePlans from './UserMobilePlan';
-import Calculate from './Calculate';
-import Payment from './Payment';
-import UserTvPlan from './UserTvPlan';
-import UserWifiPlan from './UserWifiPlan';
-import Logout from './Logout';
+import Home from './pages/Home';
+import Profile from './pages/profile';
+import AdminDashBoard from './pages/AdminDashBoard';
+import UserDashBoard from './pages/UserDashBoard';
+import { UserProvider } from './contexts/UserContext';
+import UserMobilePlans from './pages/UserMobilePlan';
+import Calculate from './pages/Calculate';
+import Payment from './pages/Payment';
+import UserTvPlan from './pages/UserTvPlan';
+import UserWifiPlan from './pages/UserWifiPlan';
+import Logout from './pages/Logout';
 function App() {
   return (
     <UserProvider>

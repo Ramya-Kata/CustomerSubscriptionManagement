@@ -19,6 +19,29 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.ramyakata.microservice.filter.JwtFilter;
 
+/**
+ * Configuration class for Spring Security in the Authentication Service.
+ * <p>
+ * This class sets up:
+ * <ul>
+ *   <li>JWT-based authentication and stateless session management</li>
+ *   <li>Custom {@link AuthenticationProvider} using a {@link UserDetailsService}</li>
+ *   <li>Public access to <code>/auth/register</code> and <code>/auth/login</code></li>
+ *   <li>A custom {@link JwtFilter} for request validation</li>
+ * </ul>
+ * 
+ * It uses Spring Security's filter chain and disables default form login
+ * in favor of token-based authentication.
+ * 
+ * ⚠️ Note: For production, password encoding should be enforced with stronger encoders like BCrypt.
+ * 
+ * @see com.ramyakata.microservice.filter.JwtFilter
+ * @see org.springframework.security.authentication.AuthenticationProvider
+ * @see org.springframework.security.crypto.password.PasswordEncoder
+ * @see org.springframework.security.web.SecurityFilterChain
+ * 
+ * @author Ramya Kata
+ */
 @Configuration
 @EnableWebSecurity
 public class AuthConfig {

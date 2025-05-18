@@ -11,10 +11,26 @@ import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
+/**
+ * Aspect for logging method execution in the {@code AccountDao} implementation.
+ * <p>
+ * This aspect captures and logs:
+ * <ul>
+ * <li>Method entry (with arguments)</li>
+ * <li>Method exit (normal and exceptional)</li>
+ * <li>Returned results from successful executions</li>
+ * <li>Exceptions thrown during method execution</li>
+ * </ul>
+ * 
+ * Target: All methods inside
+ * <code>com.ramyakata.microservice.impl.AccountDao</code>
+ * 
+ * 
+ */
 @Aspect
 @Component
 public class AspectLog {
-	@Pointcut("execution(* com.indus.training.microservice.impl.AccountDao.*(..))")
+	@Pointcut("execution(* com.ramyakata.microservice.impl.AccountDao.*(..))")
 	public void accountServiceMethods() {
 	}
 

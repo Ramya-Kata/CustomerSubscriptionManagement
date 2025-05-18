@@ -5,8 +5,40 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.ComponentScan;
 
+/**
+ * Entry point for the Authentication Service.
+ * <p>
+ * This service handles:
+ * <ul>
+ *   <li>User registration with input validation and password encryption</li>
+ *   <li>Login authentication using Spring Security and JWT tokens</li>
+ *   <li>Role-based access control and account status management</li>
+ *   <li>Secure JWT filtering via custom Spring Security filters</li>
+ *   <li>MongoDB-based persistence of user data</li>
+ * </ul>
+ * <p>
+ * Key Features:
+ * <ul>
+ *   <li>Stateless JWT authentication flow</li>
+ *   <li>Custom implementations of {@code UserDetailsService} and {@code JWTService}</li>
+ *   <li>REST endpoints exposed via {@code AuthController}</li>
+ *   <li>Service discovery enabled via Eureka</li>
+ * </ul>
+ *
+ * Registered as a microservice in a Spring Cloud environment using {@link EnableDiscoveryClient}.
+ * Component scanning ensures all beans under <code>com.ramyakata.microservice</code> are registered.
+ * 
+ * @see com.ramyakata.microservice.controller.AuthController
+ * @see com.ramyakata.microservice.impl.UserService
+ * @see com.ramykata.microservice.impl.JWTService
+ * @see com.ramyakata.microservice.filter.JwtFilter
+ * @see com.ramyakata.microservice.entity.Users
+ * 
+ * Author: Ramya Kata
+ */
+
 @SpringBootApplication
-@ComponentScan(basePackages = { "com.indus.training.microservice" })
+@ComponentScan(basePackages = { "com.ramyakata.microservice" })
 @EnableDiscoveryClient
 public class AuthServiceApplication {
 

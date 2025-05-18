@@ -4,6 +4,22 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
 
+/**
+ * Entry point for the Eureka Service Registry application.
+ * <p>
+ * This service acts as a centralized registry where all microservices register
+ * themselves and discover other services.
+ * <p>
+ * Key annotations:
+ * <ul>
+ * <li>{@link SpringBootApplication} - Enables Spring Boot
+ * auto-configuration</li>
+ * <li>{@link EnableEurekaServer} - Activates the Eureka server
+ * functionality</li>
+ * </ul>
+ * 
+ * Author: Ramya Kata
+ */
 @SpringBootApplication
 @EnableEurekaServer
 public class ServiceRegistryApplication {

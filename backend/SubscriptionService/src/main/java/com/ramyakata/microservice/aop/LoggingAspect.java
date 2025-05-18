@@ -25,7 +25,7 @@ public class LoggingAspect {
 	/**
 	 * Pointcut for all service methods.
 	 */
-	@Pointcut("execution(* com.indus.training.microservice.impl.*.*(..))")
+	@Pointcut("execution(* com.ramyakata.microservice.impl.*.*(..))")
 	public void serviceMethods() {
 	}
 

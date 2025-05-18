@@ -19,6 +19,24 @@ import com.ramyakata.microservice.exception.BankException;
 import com.ramyakata.microservice.repo.AccountRepo;
 import com.ramyakata.microservice.repo.TransactionRepo;
 
+/**
+ * Implementation of {@link AccountService} for managing customer accounts and
+ * transactions.
+ * <p>
+ * Provides functionality for:
+ * <ul>
+ * <li>Account creation with auto-generated account numbers and routing
+ * details</li>
+ * <li>Account lookup by account number</li>
+ * <li>Secure, transactional fund transfers with debit/credit tracking</li>
+ * <li>Account deletion with strict validation checks</li>
+ * </ul>
+ * <p>
+ * Uses Spring Data repositories and handles rollback on exceptions using
+ * {@link Transactional}.
+ * 
+ * Author: Ramya Kata
+ */
 @Service
 public class AccountDao implements AccountService {
 
@@ -31,6 +49,9 @@ public class AccountDao implements AccountService {
 	private static final String ROUTING_NUMBER = "CHAS000007";
 	private static final String ACCOUNT_PREFIX = "BANK";
 
+	/**
+	 * Creates and saves a new account with generated metadata.
+	 */
 	@Override
 	public Boolean saveAccount(Account account) throws BankException {
 
@@ -64,6 +85,9 @@ public class AccountDao implements AccountService {
 		return true;
 	}
 
+	/**
+	 * Fetches a customer account by account number.
+	 */
 	@Override
 	public Account getCustomerByAccountNumber(String accountNumber) throws BankException {
 
@@ -82,6 +106,10 @@ public class AccountDao implements AccountService {
 		return account;
 	}
 
+	/**
+	 * Transfers funds from a customer account to a fixed BT account. Records both
+	 * debit and credit transactions.
+	 */
 	@Transactional(rollbackFor = { BankException.class, Exception.class }, timeout = 30)
 	public Boolean transferAmount(Account fromAccount, Double amount) throws BankException {
 		// Ensure the sender account is not null and has sufficient balance
@@ -135,6 +163,10 @@ public class AccountDao implements AccountService {
 		}
 	}
 
+	/**
+	 * Deletes a customer account after validating routing number, name, type, and
+	 * expiry.
+	 */
 	@Transactional(rollbackFor = { BankException.class, Exception.class }, timeout = 30)
 	@Override
 	public Boolean deleteAccount(Account account) throws BankException {
@@ -165,6 +197,9 @@ public class AccountDao implements AccountService {
 		}
 	}
 
+	/**
+	 * Validates account details before deletion to prevent unauthorized operations.
+	 */
 	private void validateAccount(Account existingAccount, Account account) throws BankException {
 		if (!existingAccount.getRoutingNumber().equalsIgnoreCase(account.getRoutingNumber())) {
 			throw new BankException("Entered Routing Number is not valid");

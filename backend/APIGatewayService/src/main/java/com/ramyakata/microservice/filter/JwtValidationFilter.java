@@ -23,6 +23,30 @@ import com.ramyakata.microservice.service.JWTService;
 
 import reactor.core.publisher.Mono;
 
+/**
+ * Custom Gateway filter for validating JWT tokens and enforcing role-based
+ * access.
+ * <p>
+ * This filter is applied to all incoming requests via Spring Cloud Gateway. It
+ * performs the following:
+ * <ul>
+ * <li>Skips validation for public endpoints (login/register)</li>
+ * <li>Validates the Authorization header and JWT structure</li>
+ * <li>Extracts the user's role from the token</li>
+ * <li>Compares it with allowed route roles defined in route metadata</li>
+ * <li>Adds a custom header (X-Authenticated-Role) for downstream
+ * microservices</li>
+ * </ul>
+ * <p>
+ * If validation fails, an appropriate HTTP error response is returned.
+ * <p>
+ * This ensures centralized security handling at the API Gateway level.
+ * 
+ * @see com.ramyakata.microservice.service.JWTService
+ * @see org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory
+ * 
+ * @author Ramya Kata
+ */
 @Component
 public class JwtValidationFilter extends AbstractGatewayFilterFactory<JwtValidationFilter.Config> {
 
@@ -31,10 +55,21 @@ public class JwtValidationFilter extends AbstractGatewayFilterFactory<JwtValidat
 	@Autowired
 	private JWTService jwtService;
 
+	/**
+	 * Constructor for the JWT validation filter.
+	 */
 	public JwtValidationFilter() {
 		super(Config.class);
 	}
 
+	/**
+	 * Applies the JWT validation logic to each request that passes through the API
+	 * Gateway.
+	 * 
+	 * @param config filter configuration (unused here but required by factory
+	 *               signature)
+	 * @return GatewayFilter functional implementation
+	 */
 	@Override
 	public GatewayFilter apply(Config config) {
 		return (exchange, chain) -> {
@@ -89,12 +124,25 @@ public class JwtValidationFilter extends AbstractGatewayFilterFactory<JwtValidat
 			return chain.filter(exchange);
 		};
 	}
+	/**
+     * Utility method to return an error response with a specific status code.
+     *
+     * @param exchange the current server exchange
+     * @param error the error message to include in the log
+     * @param status the HTTP status to return
+     * @return Mono<Void> reactive response
+     */
 
 	private Mono<Void> onError(ServerWebExchange exchange, String error, HttpStatus status) {
 		ServerHttpResponse response = exchange.getResponse();
 		response.setStatusCode(status);
 		return response.setComplete();
 	}
+	
+	/**
+     * Configuration class placeholder for the filter.
+     * Can be extended to pass properties in the future.
+     */
 
 	public static class Config {
 		// Add custom configurations if needed

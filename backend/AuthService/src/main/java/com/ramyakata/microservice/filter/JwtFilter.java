@@ -10,14 +10,39 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.ramykata.microservice.impl.JWTService;
-import com.ramykata.microservice.impl.MyUserDetailsService;
+import com.ramyakata.microservice.impl.JWTService;
+import com.ramyakata.microservice.impl.MyUserDetailsService;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * Security filter that processes incoming HTTP requests and performs JWT
+ * validation.
+ * <p>
+ * This filter intercepts every request once (as part of
+ * {@link OncePerRequestFilter}) and performs the following:
+ * <ul>
+ * <li>Checks for the presence of an Authorization header</li>
+ * <li>Parses and validates the JWT token</li>
+ * <li>Loads the user from the database</li>
+ * <li>Populates Spring Security's context if the token is valid</li>
+ * </ul>
+ * 
+ * If the token is missing or invalid, the request proceeds without
+ * authentication.
+ * 
+ * This ensures secure, stateless authentication across requests.
+ * 
+ * @see com.ramyakata.microservice.impl.JWTService
+ * @see com.ramyakata.microservice.impl.MyUserDetailsService
+ * @see org.springframework.web.filter.OncePerRequestFilter
+ * @see org.springframework.security.core.context.SecurityContextHolder
+ * 
+ *      Author: Ramya Kata
+ */
 @Component
 public class JwtFilter extends OncePerRequestFilter {
 
@@ -27,6 +52,15 @@ public class JwtFilter extends OncePerRequestFilter {
 	@Autowired
 	private MyUserDetailsService myUserDetailsService;
 
+	/**
+	 * Core filter logic for extracting, validating, and applying the JWT token.
+	 *
+	 * @param request     the incoming HTTP request
+	 * @param response    the HTTP response
+	 * @param filterChain the filter chain to continue execution
+	 * @throws ServletException in case of errors during filter processing
+	 * @throws IOException      in case of input/output errors
+	 */
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
@@ -58,6 +92,7 @@ public class JwtFilter extends OncePerRequestFilter {
 			System.out.println("Authentication or token is null!");
 
 		}
+		// Continue with the remaining filter chain
 		filterChain.doFilter(request, response);
 	}
 }

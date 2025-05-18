@@ -4,10 +4,31 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-
+/**
+ * Global fallback controller for handling failed or unavailable service requests.
+ * <p>
+ * This controller provides a fallback response when a downstream microservice
+ * is unavailable or if unauthorized access is attempted. It helps to ensure
+ * a graceful degradation of service when failures occur behind the API Gateway.
+ * <p>
+ * The fallback route can be mapped via Spring Cloud Gateway's route definition
+ * using `fallbackUri` or handled via filters in reactive gateway flows.
+ * 
+ * Example use case:
+ * - Service is down
+ * - Request is blocked due to missing/invalid authentication
+ * - Route not found or timed out
+ * 
+ * @author Ramya Kata
+ */
 @RestController
 public class FallBackController {
 
+	/**
+     * Fallback endpoint for unavailable or unauthorized service requests.
+     *
+     * @return HTTP 503 (Service Unavailable) with a generic message
+     */
 	@GetMapping("/fallback/global")
 	public ResponseEntity<String> fallback() {
 		return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
