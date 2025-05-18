@@ -125,3 +125,13 @@ A full-stack subscription management platform designed to handle customer onboar
 
 ### 🔍 Admin – Fetch User Info
 ![Fetch User](frontend/src/assets/screenshots/admin-fetch-user.png)
+
+
+## 💡 Developer Notes (Frontend)
+
+- In this version, all API calls (using Axios) are written directly inside React components.
+- This was done to speed up development and focus on functionality.
+- In a production-grade application, I would:
+  - Create a dedicated `services/` folder
+  - Move all API calls into modular service functions
+  - Set up a centralized `axios` instance with interceptors for authentication and error handling
