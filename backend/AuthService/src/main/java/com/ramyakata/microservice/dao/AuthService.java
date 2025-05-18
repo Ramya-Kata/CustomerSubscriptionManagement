@@ -4,11 +4,49 @@ import com.ramyakata.microservice.dto.UserDto;
 import com.ramyakata.microservice.entity.Users;
 import com.ramyakata.microservice.exception.AuthException;
 
+/**
+ * Service interface for authentication-related operations.
+ * <p>
+ * Defines the contract for user registration, login verification,
+ * and retrieval of user details by username (typically email).
+ * <p>
+ * Implementations of this interface handle the actual business logic
+ * such as checking credentials, storing users securely, and generating JWTs.
+ * 
+ * @see com.ramyakata.microservice.entity.Users
+ * @see com.ramyakata.microservice.dto.UserDto
+ * @see com.ramyakata.microservice.exception.AuthException
+ * 
+ * Example implementations: {@code AuthServiceImpl}
+ * 
+ * @author Ramya Kata
+ */
 public interface AuthService {
 
+	 /**
+     * Registers a new user.
+     *
+     * @param user the user entity containing registration information
+     * @return true if registration succeeds, false otherwise
+     * @throws AuthException if registration fails (e.g., user already exists)
+     */
 	public Boolean insert(Users user) throws AuthException;
 
+	/**
+     * Verifies user credentials and returns a JWT token on successful authentication.
+     *
+     * @param user the user entity containing login credentials
+     * @return a JWT token if login is successful
+     * @throws AuthException if authentication fails
+     */
 	String verify(Users user) throws AuthException;
 
+	 /**
+     * Fetches user information by username/email.
+     *
+     * @param username the username (typically email) of the user
+     * @return UserDto with basic user details
+     * @throws AuthException if user is not found
+     */
 	public UserDto getByUserName(String username) throws AuthException;
 }

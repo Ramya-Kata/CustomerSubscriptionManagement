@@ -11,19 +11,52 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 
+/**
+ * Service class for handling JWT token operations such as validation,
+ * claim extraction, and user role parsing.
+ * <p>
+ * This service is used by the API Gateway and other security components
+ * to authenticate incoming requests and enforce role-based access.
+ * <p>
+ * Tokens are signed and validated using an HMAC-SHA key.
+ * 
+ * Dependencies: io.jsonwebtoken (jjwt) library.
+ * 
+ * ⚠️ Note: In production, the secret key should be securely stored (e.g., in environment variables or a secrets manager).
+ * 
+ * @author Ramya Kata
+ */
 @Service
 public class JWTService {
 
 	private final String SECRET_KEY = "your-static-secret-key-32-bytes!";
 
+	/**
+     * Extracts the username (subject) from the given JWT token.
+     *
+     * @param token the JWT token
+     * @return the username embedded as the subject
+     */
 	public String extractUserName(String token) {
 		return extractClaim(token, Claims::getSubject);
 	}
 
+	 /**
+     * Extracts the user's role from the token claims.
+     *
+     * @param token the JWT token
+     * @return the role claim as a string
+     */
 	public String extractRoleFromToken(String token) {
 		return extractClaim(token, claims -> claims.get("role", String.class));
 	}
 
+	/**
+     * Validates the JWT token's signature and structure.
+     *
+     * @param token the JWT token to validate
+     * @return true if valid; false if signature is invalid or token is malformed/expired
+     */
 	public boolean validateToken(String token) {
 		try {
 			Jwts.parserBuilder().setSigningKey(getKey()).build().parseClaimsJws(token);
@@ -33,15 +66,34 @@ public class JWTService {
 		}
 	}
 
+	 /**
+     * Extracts a specific claim from the JWT using a provided resolver function.
+     *
+     * @param <T> type of claim to extract
+     * @param token the JWT token
+     * @param claimsResolver lambda to extract the desired claim from the Claims object
+     * @return the extracted claim
+     */
 	private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
 		final Claims claims = extractAllClaims(token);
 		return claimsResolver.apply(claims);
 	}
 
+	 /**
+     * Parses and returns all claims from the token.
+     *
+     * @param token the JWT token
+     * @return the decoded Claims object
+     */
 	private Claims extractAllClaims(String token) {
 		return Jwts.parserBuilder().setSigningKey(getKey()).build().parseClaimsJws(token).getBody();
 	}
 
+	 /**
+     * Generates and returns the secret key used for signing and validating JWTs.
+     *
+     * @return SecretKey instance derived from the static secret
+     */
 	private SecretKey getKey() {
 		return Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
 	}

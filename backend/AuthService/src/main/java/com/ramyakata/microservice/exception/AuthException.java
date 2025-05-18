@@ -1,5 +1,31 @@
 package com.ramyakata.microservice.exception;
 
+/**
+ * Custom exception for handling authentication-related errors.
+ * <p>
+ * This exception is thrown during operations such as:
+ * <ul>
+ * <li>User registration (e.g., duplicate email or username)</li>
+ * <li>Login failure due to invalid credentials</li>
+ * <li>User lookup errors</li>
+ * </ul>
+ * <p>
+ * It is typically caught at the controller level to return meaningful HTTP
+ * responses.
+ * 
+ * Example usage:
+ * 
+ * <pre>
+ * if (user == null) {
+ * 	throw new AuthException("User not found");
+ * }
+ * </pre>
+ * 
+ * @see com.ramyakata.microservice.controller.AuthController
+ * @see com.ramyakata.microservice.dao.AuthService
+ * 
+ *      Author: Ramya Kata
+ */
 public class AuthException extends Exception {
 
 	/**

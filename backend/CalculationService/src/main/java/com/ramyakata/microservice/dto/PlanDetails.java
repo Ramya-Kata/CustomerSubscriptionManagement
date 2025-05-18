@@ -1,5 +1,28 @@
 package com.ramyakata.microservice.dto;
 
+/**
+ * Data Transfer Object (DTO) representing the details of a subscription plan.
+ * <p>
+ * This class is used by the Calculation Service to fetch plan data from remote
+ * services (via Feign) and extract pricing components needed for cost
+ * computation.
+ * <p>
+ * Fields:
+ * <ul>
+ * <li><strong>id</strong> – Unique plan identifier</li>
+ * <li><strong>planName</strong> – Name of the plan (e.g., Gold, Basic)</li>
+ * <li><strong>dataLimit</strong> – Data limit for the plan (e.g., 100GB)</li>
+ * <li><strong>speed</strong> – Connection speed in Mbps</li>
+ * <li><strong>monthlyCost</strong> – Monthly subscription fee</li>
+ * <li><strong>discount</strong> – Discount percentage applicable</li>
+ * </ul>
+ * 
+ * This object is used by
+ * {@link com.ramyakata.microservice.controller.CalculationProxyController}
+ * during dynamic cost calculations.
+ * 
+ * Author: Ramya Kata
+ */
 public class PlanDetails {
 
 	private Long id;

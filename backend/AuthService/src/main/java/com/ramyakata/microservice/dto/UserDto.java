@@ -2,6 +2,28 @@ package com.ramyakata.microservice.dto;
 
 import java.util.Date;
 
+/**
+ * Data Transfer Object (DTO) representing a simplified view of the user.
+ * <p>
+ * This class is used to return non-sensitive user details in response to
+ * authenticated requests (e.g., after login or during user lookup).
+ * <p>
+ * It does not contain password or credential information.
+ * 
+ * Fields:
+ * <ul>
+ * <li><strong>username</strong>: the user's name or login identifier</li>
+ * <li><strong>email</strong>: the user's email address</li>
+ * <li><strong>lastLogin</strong>: timestamp of the user's most recent
+ * login</li>
+ * <li><strong>role</strong>: user's role (e.g., USER, ADMIN)</li>
+ * </ul>
+ * 
+ * @see com.ramyakata.microservice.entity.Users
+ * @see com.ramyakata.microservice.controller.AuthController
+ * 
+ * @author Ramya Kata
+ */
 public class UserDto {
 
 	private String username;
@@ -9,6 +31,14 @@ public class UserDto {
 	private Date lastLogin;
 	private String role;
 
+	/**
+	 * Constructs a new UserDto with the given fields.
+	 *
+	 * @param username  the username of the user
+	 * @param email     the email address of the user
+	 * @param lastLogin the last login time of the user
+	 * @param role      the role assigned to the user
+	 */
 	public UserDto(String username, String email, Date lastLogin, String role) {
 		this.username = username;
 		this.email = email;
@@ -27,7 +57,7 @@ public class UserDto {
 	public Date getLastLogin() {
 		return lastLogin;
 	}
-	
+
 	public String getRole() {
 		return role;
 	}

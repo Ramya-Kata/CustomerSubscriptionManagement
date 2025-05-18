@@ -1,0 +1,73 @@
+package com.ramykata.microservice.impl;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+
+import com.ramyakata.microservice.entity.UserPrinciple;
+import com.ramyakata.microservice.entity.Users;
+import com.ramyakata.microservice.repo.UserRepo;
+
+/**
+ * Custom implementation of {@link UserDetailsService} that integrates with
+ * the application's user repository.
+ * <p>
+ * This service is responsible for:
+ * <ul>
+ *   <li>Loading user details during Spring Security authentication</li>
+ *   <li>Caching authenticated users to minimize database access</li>
+ *   <li>Wrapping users in {@link UserPrinciple} for Spring Security</li>
+ * </ul>
+ * 
+ * It also provides a secondary method {@code fetchUserName()} which supports
+ * cache-aware retrieval of user information.
+ * 
+ * @see com.ramyakata.microservice.entity.UserPrinciple
+ * @see com.ramyakata.microservice.entity.Users
+ * @see org.springframework.security.core.userdetails.UserDetailsService
+ * 
+ * Author: Ramya Kata
+ */
+@Service
+public class MyUserDetailsService implements UserDetailsService {
+
+	@Autowired
+	private UserRepo repo;
+
+    // Simple in-memory cache to reduce repeated DB calls
+	private final Map<String, UserDetails> userCache = new ConcurrentHashMap<>();
+
+	/**
+     * Loads a user by username (required by Spring Security).
+     *
+     * @param username the username to look up
+     * @return the user's {@link UserDetails}
+     * @throws UsernameNotFoundException if the user does not exist
+     */
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		Users user = repo.findByUsername(username);
+
+		if (user == null) {
+			throw new UsernameNotFoundException("User not found");
+		}
+
+		System.out.println("User fetched: " + user);
+		return new UserPrinciple(user);
+	}
+
+	public UserDetails fetchUserName(String username) {
+		if (userCache.containsKey(username)) {
+			System.out.println("Cache hit for user: " + username);
+		} else {
+			System.out.println("Cache miss for user: " + username);
+		}
+		return userCache.computeIfAbsent(username, this::loadUserByUsername);
+	}
+
+}

@@ -24,7 +24,7 @@ public class Logging {
 	 * Pointcut to match all methods in the ProfileServiceImpl class. This pointcut
 	 * is used to apply logging functionality to all public methods in the class.
 	 */
-	@Pointcut("execution(* com.indus.training.microservice.impl.ProfileServiceImpl.*(..))")
+	@Pointcut("execution(* com.ramyakata.microservice.impl.ProfileServiceImpl.*(..))")
 	public void profileServiceMethods() {
 		// Pointcut definition; no implementation required.
 	}

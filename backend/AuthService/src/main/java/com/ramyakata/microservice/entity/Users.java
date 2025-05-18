@@ -12,6 +12,28 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
+/**
+ * MongoDB document representing a user account in the authentication system.
+ * <p>
+ * This entity is mapped to the <code>users</code> collection in MongoDB.
+ * It stores essential user credentials, metadata, and account status.
+ * 
+ * Key features:
+ * <ul>
+ *   <li>Unique username and email enforced via @Indexed</li>
+ *   <li>Field-level validation with Jakarta annotations</li>
+ *   <li>Tracks account creation, login time, and status</li>
+ * </ul>
+ * 
+ * This class is used for both login and registration workflows, and is wrapped
+ * by {@link com.ramyakata.microservice.entity.UserPrinciple} for Spring Security.
+ * 
+ * @see com.ramyakata.microservice.entity.Status
+ * @see com.ramyakata.microservice.dto.UserDto
+ * @see org.springframework.data.mongodb.core.mapping.Document
+ * 
+ * Author: Ramya Kata
+ */
 @Document(collection = "users")
 public class Users {
 

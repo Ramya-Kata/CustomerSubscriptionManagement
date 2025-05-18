@@ -1,0 +1,61 @@
+package com.ramyakata.microservice.aop;
+
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.After;
+//import org.aspectj.lang.annotation.AfterReturning;
+//import org.aspectj.lang.annotation.AfterThrowing;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+
+/**
+ * Aspect for logging execution of controller and service methods.
+ * <p>
+ * This class uses Spring AOP (Aspect-Oriented Programming) to intercept
+ * method calls within the application and log their entry and exit points.
+ * <p>
+ * It targets all methods under:
+ * <ul>
+ *     <li>{@code com.ramyakata.microservice.controller..*}</li>
+ *     <li>{@code com.ramyakata.microservice.service..*}</li>
+ * </ul>
+ * <p>
+ * Logging is done using SLF4J with {@link LoggerFactory}.
+ * 
+ * This improves observability and simplifies debugging across layers.
+ * 
+ * @author Ramya Kata
+ */
+@Aspect
+@Component
+public class LoggingAspect {
+	private static final Logger logger = LoggerFactory.getLogger(LoggingAspect.class);
+
+
+    /**
+     * Logs the method entry for all controller methods.
+     *
+     * @param joinPoint provides metadata about the intercepted method
+     */
+	@Before("execution(* com.ramyakata.microservice.controller..*(..))")
+	public void logBeforeControllerMethods(JoinPoint joinPoint) {
+		logger.info("Entering method: {}", joinPoint.getSignature().toShortString());
+	}
+
+	@After("execution(* com.ramyakata.microservice.controller..*(..))")
+	public void logAfterControllerMethods(JoinPoint joinPoint) {
+		logger.info("Exiting method: {}", joinPoint.getSignature().toShortString());
+	}
+
+	@Before("execution(* com.ramyakata.microservice.service..*(..))")
+	public void logBeforeServiceMethods(JoinPoint joinPoint) {
+		logger.info("Entering service method: {}", joinPoint.getSignature().toShortString());
+	}
+
+	@After("execution(* com.ramyakata.microservice.service..*(..))")
+	public void logAfterServiceMethods(JoinPoint joinPoint) {
+		logger.info("Exiting service method: {}", joinPoint.getSignature().toShortString());
+	}
+}

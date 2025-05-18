@@ -16,6 +16,32 @@ import com.ramyakata.microservice.dto.UserDto;
 import com.ramyakata.microservice.entity.Users;
 import com.ramyakata.microservice.exception.AuthException;
 
+/**
+ * REST controller for handling authentication-related operations.
+ * <p>
+ * This controller exposes endpoints for:
+ * <ul>
+ *     <li>User registration</li>
+ *     <li>User login and JWT token generation</li>
+ *     <li>Fetching user details by username (typically email)</li>
+ * </ul>
+ * <p>
+ * These endpoints are consumed by the frontend during login and registration,
+ * and protected by Spring Security configurations outside of `/auth/login` and `/auth/register`.
+ * 
+ * @see com.ramyakata.microservice.dao.AuthService
+ * @see com.ramyakata.microservice.dto.UserDto
+ * @see com.ramyakata.microservice.entity.Users
+ * @see com.ramyakata.microservice.exception.AuthException
+ * 
+ * ⚠️ Note: Actual JWT handling is delegated to {@link AuthService}.
+ * 
+ * Base URL: <code>/auth</code>
+ * 
+ * 
+ * @author Ramya Kata
+ */
+
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
@@ -23,6 +49,13 @@ public class AuthController {
 	@Autowired
 	public AuthService authService;
 
+	/**
+     * Retrieves user information based on username (typically an email).
+     *
+     * @param username the email/username of the user
+     * @return 200 OK with user data if found, otherwise 404 NOT FOUND
+     * @throws AuthException in case of internal failures or validation errors
+     */
 	@GetMapping("/find/{username}")
 	public ResponseEntity<UserDto> userByGmail(@PathVariable String username) throws AuthException {
 		System.out.println("Searching for user with email: " + username);
@@ -35,12 +68,26 @@ public class AuthController {
 
 	}
 
+	 /**
+     * Registers a new user in the system.
+     *
+     * @param user the user entity containing registration details
+     * @return true if registration is successful, false otherwise
+     * @throws AuthException in case of duplicate or invalid input
+     */
 	@PostMapping("/register")
 	public Boolean insertion(@RequestBody Users user) throws AuthException {
 		return authService.insert(user);
 
 	}
 
+	/**
+     * Authenticates a user with provided credentials and returns a JWT token.
+     *
+     * @param user the user entity with login credentials
+     * @return JWT token if login is successful, error otherwise
+     * @throws AuthException if authentication fails
+     */
 	@PostMapping("/login")
 	public String login(@RequestBody Users user) throws AuthException {
 //		return "Success.!! Welcome "+user;

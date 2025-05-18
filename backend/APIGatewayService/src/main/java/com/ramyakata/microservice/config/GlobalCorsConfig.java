@@ -8,6 +8,26 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.CorsWebFilter;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 
+/**
+ * Global CORS configuration for the API Gateway.
+ * <p>
+ * This configuration allows cross-origin requests from the frontend to access 
+ * backend microservices through the gateway.
+ * <p>
+ * CORS settings include:
+ * <ul>
+ *     <li>Allowed origins</li>
+ *     <li>HTTP methods (GET, POST, PUT, DELETE)</li>
+ *     <li>Custom headers such as Authorization</li>
+ *     <li>Credential sharing</li>
+ * </ul>
+ * <p>
+ * By registering this filter at the gateway level, all incoming 
+ * requests from the frontend must go through this configuration 
+ * before reaching downstream services.
+ * 
+ * @author Ramya Kata
+ */
 
 @Configuration
 public class GlobalCorsConfig {

@@ -15,6 +15,21 @@ import com.ramyakata.microservice.dao.AccountService;
 import com.ramyakata.microservice.entity.Account;
 import com.ramyakata.microservice.exception.BankException;
 
+/**
+ * REST controller for managing customer bank accounts.
+ * <p>
+ * This controller provides endpoints for:
+ * <ul>
+ * <li>Adding new accounts</li>
+ * <li>Searching for accounts by account number</li>
+ * <li>Transferring funds</li>
+ * <li>Deleting accounts</li>
+ * </ul>
+ * 
+ * Base URL: <code>/account</code>
+ * 
+ *
+ */
 @RestController
 @RequestMapping("/account")
 public class AccountController {
@@ -22,6 +37,13 @@ public class AccountController {
 	@Autowired
 	private AccountService accountServiceObj;
 
+	/**
+	 * Adds a new customer account.
+	 *
+	 * @param account the account data to save
+	 * @return 201 if created, 400 if failed
+	 * @throws BankException if account saving fails
+	 */
 	@PostMapping("/add")
 	public ResponseEntity<String> addAccount(@RequestBody Account account) throws BankException {
 		Boolean isSaved = accountServiceObj.saveAccount(account);
@@ -32,6 +54,13 @@ public class AccountController {
 		}
 	}
 
+	/**
+	 * Retrieves an account by its account number.
+	 *
+	 * @param accountNumber the account number to search
+	 * @return the account object if found, 404 otherwise
+	 * @throws BankException if lookup fails
+	 */
 	@GetMapping("/search/{accountNumber}")
 	public ResponseEntity<Account> getAccountById(@PathVariable String accountNumber) throws BankException {
 		Account account = accountServiceObj.getCustomerByAccountNumber(accountNumber);
@@ -42,7 +71,14 @@ public class AccountController {
 		}
 	}
 
-	// Transfer Method: Transfer funds from one account to another
+	/**
+	 * Transfers a specified amount from one account to another.
+	 *
+	 * @param fromAccountNumber the sender's account number
+	 * @param amount            the amount to transfer
+	 * @return success or failure message
+	 * @throws BankException if transfer fails or sender not found
+	 */
 	@PostMapping("/transfer")
 	public ResponseEntity<String> transferAmount(@RequestParam String fromAccountNumber, @RequestParam Double amount)
 			throws BankException {
@@ -63,7 +99,13 @@ public class AccountController {
 		}
 	}
 
-	// Delete Method: Delete an account by account number
+	/**
+	 * Deletes a customer account based on account number.
+	 *
+	 * @param accountNumber the account to delete
+	 * @return deletion result message
+	 * @throws BankException if deletion fails or account not found
+	 */
 	@DeleteMapping("/delete/{accountNumber}")
 	public ResponseEntity<String> deleteAccount(@PathVariable String accountNumber) throws BankException {
 		Account account = accountServiceObj.getCustomerByAccountNumber(accountNumber);
